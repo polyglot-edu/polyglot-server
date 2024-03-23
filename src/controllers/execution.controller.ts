@@ -68,7 +68,8 @@ export async function startExecution(req: Request<{},any,StartExecutionBody>, re
 
     return res.status(200).json({
       ctx: ctxId,
-      platform: firstNode.platform
+      platform: firstNode.platform,
+      type: firstNode.type
     })
   } catch(err) {
     next(err);
