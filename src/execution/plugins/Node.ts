@@ -27,6 +27,12 @@ export type MultipleChoiceQuestionNodeData = {
   n_o_d: number;
 };
 
+export type CodingQuestionNodeData = {
+  question: string;
+  codeTemplate: string;
+  language: string;
+};
+
 export type TrueFalseNodeData = {
   instructions: string;
   questions: string[];
@@ -35,14 +41,14 @@ export type TrueFalseNodeData = {
   positvePoints: number;
 };
 
-export type closeEndedQuestionNodeData = {
+export type CloseEndedQuestionNodeData = {
   question: string;
   correctAnswers: string[];
 };
 
-export type openQuestionNodeData = {
+export type OpenQuestionNodeData = {
   question: string;
-  correctAnswers: string[];
+  material: string;
   aiQuestion: boolean;
   language?: string;
   questionGenerated?: string;

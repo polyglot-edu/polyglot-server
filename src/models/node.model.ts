@@ -139,7 +139,21 @@ export const FindSolutionNodeSchema = new mongoose.Schema({
 export const closeEndedQuestionNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
-        correctAnswers: [{type: String}]
+        correctAnswers: [{type: String}],
+        isAnswerCorrect: [{type: Boolean}]        
+    }
+}, options);
+
+export const openQuestionNodeSchema = new mongoose.Schema({
+    data: {
+        question: {type: String},
+        material: {type: String},
+        aiQuestion: {type: Boolean},
+        language: {type: String},
+        questionGenerated: {type: String},
+        possibleAnswer: {type: String},
+        questionCategory: {type: Number},
+        questionType: {type: Number},
     }
 }, options);
 
@@ -158,6 +172,14 @@ export const openQuestionNodeSchema = new mongoose.Schema({
 }, options);
 
 export const codingQuestionNodeSchema = new mongoose.Schema({
+    data: {
+        question: {type: String},
+        codeTemplate: {type: String, default: ""},
+        language: {type: String, enum: ["csharp","sysml"], default: "csharp"}
+    }
+}, options);
+
+export const promptEngineeringNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
         codeTemplate: {type: String, default: ""},
@@ -185,8 +207,10 @@ export const multipleChoiceQuestionNodeSchema = new mongoose.Schema({
 export const TrueFalseNodeSchema = new mongoose.Schema({
     data: {
         instructions: {type: String},
-        question: {type: String},
-        isQuestionCorrect: [{type: Boolean}]
+        questions: [{type: String}],
+        isQuestionCorrect: [{type: Boolean}],
+        negativePoints: {type: Number},
+        positvePoints: {type: Number}
     }
 }, options);
 
@@ -246,6 +270,8 @@ export const CloseEndedQuestionNode = PolyglotNodeModel.discriminator('closeEnde
 export const OpenQuestionNode = PolyglotNodeModel.discriminator('OpenQuestionNode', openQuestionNodeSchema);
 
 export const CodingQuestionNode = PolyglotNodeModel.discriminator('codingQuestionNode', codingQuestionNodeSchema);
+
+export const PromptEngineeringNode = PolyglotNodeModel.discriminator('PromptEngineeringNode', promptEngineeringNodeSchema);
 
 export const MultipleChoiceQuestionNode = PolyglotNodeModel.discriminator('multipleChoiceQuestionNode', multipleChoiceQuestionNodeSchema);
 
