@@ -17,6 +17,19 @@ export async function deleteFlow(req: Request, res: Response, next: NextFunction
   }
 }
 
+export async function serverCleanUp(req: Request, res: Response, next: NextFunction) {
+  try {
+    if(req.params.password!='polyglotClean') throw 'Wrong password';
+    
+    const resp = await await PolyglotFlowModel.deleteMany({nodes:[]});
+    console.log(resp);
+    res.status(204).json();
+  } catch (error) {
+    next(error);
+  }
+}
+
+
 /*
     Get flow by id
     @route GET /flows/:id
