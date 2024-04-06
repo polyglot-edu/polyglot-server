@@ -157,20 +157,6 @@ export const openQuestionNodeSchema = new mongoose.Schema({
     }
 }, options);
 
-export const openQuestionNodeSchema = new mongoose.Schema({
-    data: {
-        question: {type: String},
-        correctAnswers: [{type: String}],
-        material: {type: String},
-        aiQuestion: {type: Boolean},
-        language: {type: String},
-        questionGenerated: {type: String},
-        possibleAnswer: {type: String},
-        questionCategory: {type: Number},
-        questionType: {type: Number},
-    }
-}, options);
-
 export const codingQuestionNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
