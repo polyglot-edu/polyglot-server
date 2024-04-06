@@ -14,6 +14,10 @@ router.post("/cmd", ExecutionController.sendCommand)
 // router.post("/next", ExecutionController.getNextExercise)
 // router.post("/first", ExecutionController.getInitialExercise)
 
+router.route("/:id/pdfCorrection")    //function to download the flow pdf with the correction
+    .get( ExecutionController.downloadCorrectedPdf);
+router.route("/:id/pdf")    //function to download the flow pdf to do
+    .get(ExecutionController.downloadPdf);
 
 /**
  * ALEXA TEST API

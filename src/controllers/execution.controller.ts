@@ -3,6 +3,8 @@ import PolyglotFlowModel from "../models/flow.model";
 import { v4 } from "uuid";
 import { ExecCtx, Execution } from "../execution/execution";
 import { start } from "repl";
+import { PolyglotNodeValidation } from "../types/PolyglotNode";
+import { nodeTypeExecution } from "../execution/plugins/pluginMap";
 
 type SendCommandBody = {
   ctxId: string;
@@ -128,16 +130,16 @@ export async function getNextExercisev2(req: Request<{},any, GetNextExerciseV2Bo
 
     const execution = new Execution({ctx, algo, flow});
 
-    const {ctx: updatedCtx, node: firstNode} = await execution.getNextExercise(satisfiedConditions, ctxId);
+    const {ctx: updatedCtx, node: nextNode} = await execution.getNextExercise(satisfiedConditions, ctxId);
 
-    if (!firstNode) {
+    if (!nextNode) {
         res.status(404).send();
         return;
     }
 
     ctxs[ctxId] = updatedCtx;
 
-    return res.status(200).json(firstNode);
+    return res.status(200).json(nextNode);
   }catch(err) {
     next(err);
   }
@@ -224,4 +226,107 @@ export async function getNextExercise(req: Request<{}, any, GetNextExerciseBody>
     }catch(err) {
       next(err);
     }
+}
+async function getNextFromFlow(flowId: string, satisfiedConditions: string){
+  const flow = await PolyglotFlowModel
+  .findById(flowId)
+  .populate("nodes")
+  .populate("edges");
+  if (!flow) {
+    throw 'no flow';
+  }
+  const satisfiedEdges = flow.edges.filter(edge => satisfiedConditions==edge.reactFlow.id);
+  const currentNode = flow.nodes.filter(node=> satisfiedEdges[0].reactFlow.source==node._id);
+  const outgoingEdges = flow.edges.filter(edge => edge.reactFlow.source === currentNode[0].reactFlow.id);
+  const actualNode: PolyglotNodeValidation = {
+    ...currentNode[0]!,
+    validation: outgoingEdges.map(e => ({
+        id: e.reactFlow.id,
+        title: e.title,
+        code: e.code,
+        data: e.data,
+        type: e.type,
+    }))
+  }
+  return actualNode;
+}
+//API to download the flow in a pdf format
+
+export async function downloadPdf(req: Request, res: Response, next: NextFunction) {
+  try {
+    const flow = await PolyglotFlowModel
+      .findById(req.params.id)
+      .populate("nodes")
+      .populate("edges");
+    if (!flow) {
+      return res.status(404).send();
+    }
+    
+    //idea: it creates an execution flow that updates the actualNode to create the pdf in the correct order
+
+    const algo = flow?.execution?.algo ?? "Random Execution";
+
+    // create execution obj
+    const ctx = Execution.createCtx(flow._id, "");
+    const execution = new Execution({ctx, algo, flow});
+
+    let {ctx: updatedCtx, node: actualNode} = execution.getFirstExercise();
+    // create execution ctx id
+    const ctxId = v4();
+
+    // TODO: add to database
+    ctxs[ctxId] = updatedCtx; 
+  
+    if (!actualNode) {
+      return res.status(404).send('Error no FirstNode founded')
+    }
+    const title= flow.title;
+    const description=flow.description;
+    let template=`
+      <div>`+title+`</div>
+      <div>`+description+`</div>
+    `;
+    let i=0;
+    do{
+      const exTitle=actualNode.title;
+      const exDesc=actualNode.description;
+      const exData=actualNode.data;
+      const satisfiedConditions:string|null=actualNode.validation[0].id;
+      if(!satisfiedConditions) break;
+      console.log("provaaaaaaaaa"+satisfiedConditions);
+      template+=`<div>`+exTitle+`</div>`+`<div>`+exDesc+`</div>`+`<div>`+exData+`</div>`;
+      console.log(template);
+      actualNode= await getNextFromFlow( flow.id, satisfiedConditions);
+      i++;
+    }while(actualNode!=null&&i<=3);
+    return;
+    const file = Buffer.from(template);
+    res.setHeader('Content-Length', file.length);
+    res.setHeader('Content-Disposition', `attachment; filename=notebook-${req.params.id}.dib`);
+    res.write(file, 'binary');
+    res.end();
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function downloadCorrectedPdf(req: Request, res: Response, next: NextFunction) {
+  try {
+    const flow = await PolyglotFlowModel
+      .findById(req.params.id)
+      .populate("nodes")
+      .populate("edges");
+    if (!flow) {
+      return res.status(404).send();
+    }
+  const template = ` `
+
+  const file = Buffer.from(template);
+  res.setHeader('Content-Length', file.length);
+  res.setHeader('Content-Disposition', `attachment; filename=notebook-${req.params.id}.dib`);
+  res.write(file, 'binary');
+  res.end();
+  } catch (err) {
+    return next(err);
+  }
 }
