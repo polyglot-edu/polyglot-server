@@ -157,6 +157,20 @@ export const openQuestionNodeSchema = new mongoose.Schema({
     }
 }, options);
 
+export const openQuestionNodeSchema = new mongoose.Schema({
+    data: {
+        question: {type: String},
+        correctAnswers: [{type: String}],
+        material: {type: String},
+        aiQuestion: {type: Boolean},
+        language: {type: String},
+        questionGenerated: {type: String},
+        possibleAnswer: {type: String},
+        questionCategory: {type: Number},
+        questionType: {type: Number},
+    }
+}, options);
+
 export const codingQuestionNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
@@ -177,7 +191,16 @@ export const multipleChoiceQuestionNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
         choices: [{type: String}],
-        isChoiceCorrect: [{type: Boolean}]
+        isChoiceCorrect: [{type: Boolean}],
+        aiQuestion: {type: String},
+        solution: {type: String},
+        language: {type: String},
+        text: {type: String},
+        level: {type: Number},
+        questionCategory: {type: Number},
+        n_o_ca: {type: Number},
+        nedd: {type: Number},
+        n_o_d: {type: Number},
     }
 }, options);
 
