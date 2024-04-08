@@ -37,9 +37,21 @@ export const flowSchema = new mongoose.Schema<PolyglotFlow>({
       required: true,
       default: false,
     },
-    learningPathId: {
-      type: String
+    learningContext: { 
+      type: String,
+      required: true,
+      default: ' ',
     },
+    duration: { 
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    topics: [{ 
+      type: String,
+      required: true,
+      default: ' ',
+    }],
     tags: [{
       type: {
         name: {type: String},
