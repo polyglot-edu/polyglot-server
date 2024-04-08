@@ -12,6 +12,9 @@ export type PolyglotFlowInfo = {
     description: string;
     publish: boolean;
     platform: string;
+    learningContext: string;
+    duration: number;
+    topics:string[];
     /* to be discussed: do we want to save in the database the last summarized material of the professor?
     sourceMaterial?: string;
     levelMaterial?: string;
