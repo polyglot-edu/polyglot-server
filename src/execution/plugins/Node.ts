@@ -16,15 +16,6 @@ export type MultipleChoiceQuestionNodeData = {
   question: string;
   choices: string[];
   isChoiceCorrect: boolean[];
-  aiQuestion: boolean;
-  solution: string;
-  language: string;
-  text: string;
-  level: number;
-  questionCategory: number;
-  n_o_ca: number;
-  nedd: number;
-  n_o_d: number;
 };
 
 export type CodingQuestionNodeData = {
@@ -49,12 +40,7 @@ export type CloseEndedQuestionNodeData = {
 export type OpenQuestionNodeData = {
   question: string;
   material: string;
-  aiQuestion: boolean;
-  language?: string;
-  questionGenerated?: string;
   possibleAnswer?: string;
-  questionCategory?: number;
-  questionType?: number;
 };
   
 export const zip = <T, K>(a: T[], b: K[]) =>
