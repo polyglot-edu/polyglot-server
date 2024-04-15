@@ -140,6 +140,7 @@ export const closeEndedQuestionNodeSchema = new mongoose.Schema({
     data: {
         question: {type: String},
         correctAnswers: [{type: String}],
+        textToFill: {type: String},
         isAnswerCorrect: [{type: Boolean}]        
     }
 }, options);
