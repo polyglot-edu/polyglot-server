@@ -34,6 +34,7 @@ export type TrueFalseNodeData = {
 
 export type CloseEndedQuestionNodeData = {
   question: string;
+  textToFill?: string;
   correctAnswers: string[];
 };
 
