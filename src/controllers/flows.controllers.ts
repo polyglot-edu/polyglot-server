@@ -7,6 +7,17 @@ import { PolyglotEdge, PolyglotFlowInfo, PolyglotNode } from "../types";
 import { PolyglotEdgeModel } from "../models/edge.models";
 import { DOMAIN_APP_DEPLOY } from "../utils/secrets";
 
+function customizeErrorMessage(err:any){
+  console.log(err.message);
+  if(err.message.search('title')!=-1)
+    return 'To create a flow a title is required'
+  if(err.message.search('description')!=-1)
+    return 'To create a flow a description is required'
+  if(err.message.search('duration')!=-1)
+    return 'The duration need to be a number, please correct or remove any characters, you can always change it later on. (For decimals use dot)'
+  return err.message;
+}
+
 export async function deleteFlow(req: Request, res: Response, next: NextFunction) {
   try {
     const resp = await PolyglotFlowModel.deleteOne({_id: req.params.id, author: req.user?._id})
@@ -228,7 +239,8 @@ export async function updateFlow(req: Request, res: Response, next: NextFunction
       }
 
       return res.status(200).send(flow);
-    } catch (err) {
+    } catch (err: any) {
+      err.message = customizeErrorMessage(err);
       return res.status(500).send(err);
     }
     
@@ -261,8 +273,8 @@ export async function createFlow(req: Request, res: Response, next : NextFunctio
 
     const flow =  await PolyglotFlowModel.create(newFlow);
     return res.status(200).send(flow);
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    err.message = customizeErrorMessage(err);
     return res.status(500).send(err);
   }
 }
@@ -283,8 +295,9 @@ export async function createFlowJson(req: Request, res: Response, next : NextFun
       if (!newFlow) return res.status(500).json({"error": "internal error"})
     
       return res.status(200).send({id: newFlow?._id});
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+      err.message = customizeErrorMessage(err);
       return res.status(500).send(err);
     }
 }
