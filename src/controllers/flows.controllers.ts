@@ -46,8 +46,8 @@ export async function getFlowById(req: Request, res: Response<Document<unknown, 
         return res.status(404).send();
       }
       return res.status(200).send(flow);
-    } catch (err) {
-      return next(err);
+    } catch (err: any) {
+      return res.status(500).send(err);
     }
     
 }
@@ -122,8 +122,8 @@ export async function getFlowList(req: Request, res: Response, next : NextFuncti
       return res.status(404).send();
     }
     return res.status(200).send(flows);
-  } catch (err) {
-    return next(err);
+  } catch (err: any) {
+    return res.status(500).send(err);
   }
   
 }
@@ -229,7 +229,7 @@ export async function updateFlow(req: Request, res: Response, next: NextFunction
 
       return res.status(200).send(flow);
     } catch (err) {
-      return next(err);
+      return res.status(500).send(err);
     }
     
 }
@@ -249,7 +249,7 @@ export async function publishFlow(req: Request, res: Response, next : NextFuncti
 
     return res.status(200).send(flows);
   } catch (err) {
-    return next(err);
+    return res.status(500).send(err);
   }
   
 }
@@ -263,7 +263,7 @@ export async function createFlow(req: Request, res: Response, next : NextFunctio
     return res.status(200).send(flow);
   } catch (err) {
     console.log(err);
-    return next(err);
+    return res.status(500).send(err);
   }
 }
 
@@ -285,6 +285,6 @@ export async function createFlowJson(req: Request, res: Response, next : NextFun
       return res.status(200).send({id: newFlow?._id});
     } catch (err) {
       console.log(err);
-      return next(err);
+      return res.status(500).send(err);
     }
 }
