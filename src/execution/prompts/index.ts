@@ -3,58 +3,89 @@ import { OpenAI } from "../../openai/client";
 
 export type GenResProps = {
   num_ex: number;
-  type_ex: 'quiz'| 'multiple choice' | 'open ended question' | 'close ended question' | 'true or false' | 'numerical';
+  type_ex:
+    | "quiz"
+    | "multiple choice"
+    | "open ended question"
+    | "close ended question"
+    | "true or false"
+    | "numerical";
   language: string;
   topic: string;
-  bloom_lv: 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
+  bloom_lv:
+    | "remember"
+    | "understand"
+    | "apply"
+    | "analyze"
+    | "evaluate"
+    | "create";
   num_choices?: number;
-  num_answer?: number
-}
+  num_answer?: number;
+};
 
 type generateJsonTemplateProps = {
   num_ex: number;
-  bloom_lv: 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
+  bloom_lv:
+    | "remember"
+    | "understand"
+    | "apply"
+    | "analyze"
+    | "evaluate"
+    | "create";
   num_choices: number;
-  num_answer: number
-}
+  num_answer: number;
+};
 
-const generateJsonTemplate = ({num_ex, bloom_lv, num_choices, num_answer}: generateJsonTemplateProps) => {
-  const output = []
+const generateJsonTemplate = ({
+  num_ex,
+  bloom_lv,
+  num_choices,
+  num_answer,
+}: generateJsonTemplateProps) => {
+  const output = [];
 
-  const cs = []
-  for (let i=0;i<num_answer;i++) {
-    cs.push("true")
+  const cs = [];
+  for (let i = 0; i < num_answer; i++) {
+    cs.push("true");
   }
-  for(let i=num_answer;i<num_choices;i++) {
-    cs.push("false")
+  for (let i = num_answer; i < num_choices; i++) {
+    cs.push("false");
   }
 
-  const c = []
-  for(let i=0;i<num_choices;i++) {
-    c.push("\"choice" + i + "\"")
+  const c = [];
+  for (let i = 0; i < num_choices; i++) {
+    c.push('"choice' + i + '"');
   }
 
-  for (let i=0;i<num_ex;i++) {
+  for (let i = 0; i < num_ex; i++) {
     output.push(`{
       "choices": [
         ${c.join(",")}
       ],
       "isChoiceCorrect": [
-        ${cs.sort( _ => 0.5 - Math.random()).join(",")}
+        ${cs.sort((_) => 0.5 - Math.random()).join(",")}
       ],
       "question": "question?",
       "bloom_lvl": "${bloom_lv}"
-    }`)
+    }`);
   }
 
-  return `[${output.join(",")}]`
-}
+  return `[${output.join(",")}]`;
+};
 
-export const createResPrompt = ({num_ex, type_ex, language, topic, bloom_lv, num_choices = 4, num_answer = 1}: GenResProps) => {
+export const createResPrompt = ({
+  num_ex,
+  type_ex,
+  language,
+  topic,
+  bloom_lv,
+  num_choices = 4,
+  num_answer = 1,
+}: GenResProps) => {
   const quiz_input: string = `Please, give me ${num_ex} ${type_ex} exercise${num_ex > 1 ? "s" : ""} in ${language} about ${topic} with
                         Bloom's taxonomy level = "${bloom_lv}" with ${num_choices} possible choices per exercise${num_ex > 1 ? "s" : ""} 
                         where every exercise${num_ex > 1 ? "s" : ""} must have ${num_answer} true choices. All the exercises should formatted as following example:
-                        ${generateJsonTemplate({num_ex, bloom_lv, num_answer, num_choices})}
+                        ${generateJsonTemplate({ num_ex, bloom_lv, num_answer, num_choices })}
                         `;
 
   const question_input: string = `Please, give me ${num_ex} ${type_ex} exercises in ${language} about ${topic} 
@@ -72,40 +103,39 @@ export const createResPrompt = ({num_ex, type_ex, language, topic, bloom_lv, num
 
   let userInput: string = ``;
 
-  switch(type_ex) {
-    case 'quiz': 
-        userInput = quiz_input;
-        break;
-    case 'multiple choice': 
-        userInput = quiz_input;
-        break;
-    case 'open ended question': 
-        userInput = question_input;
-        break;
-    case 'close ended question': 
-        userInput = question_input;
-        break;
-    case 'true or false': 
-        num_choices = 2;
-        num_answer = 1;
-        userInput = quiz_input;
-        break;
-    case 'numerical': 
-        userInput = quiz_input;
-        break;
+  switch (type_ex) {
+    case "quiz":
+      userInput = quiz_input;
+      break;
+    case "multiple choice":
+      userInput = quiz_input;
+      break;
+    case "open ended question":
+      userInput = question_input;
+      break;
+    case "close ended question":
+      userInput = question_input;
+      break;
+    case "true or false":
+      num_choices = 2;
+      num_answer = 1;
+      userInput = quiz_input;
+      break;
+    case "numerical":
+      userInput = quiz_input;
+      break;
     default:
       return null;
   }
 
   return userInput;
-
-}
+};
 
 export const createSubconceptsPrompt = (concept: string) => {
-  const prompt = `give me an array of major subconcept about ${concept} without additions of any kind in the format as follow  ["concept1","concept2"]`
+  const prompt = `give me an array of major subconcept about ${concept} without additions of any kind in the format as follow  ["concept1","concept2"]`;
 
   return prompt;
-}
+};
 
 function createGraphPrompt() {
   const topic = "Second world war";
@@ -127,7 +157,6 @@ function createGraphPrompt() {
   `;
 
   return prompt;
-
 }
 
 export const sendPrompt = async (input: string) => {
@@ -144,17 +173,16 @@ export const sendPrompt = async (input: string) => {
   ];
 
   const openai = new OpenAI();
-  
+
   const completion = await openai.listChatCompletion(messages);
 
   return completion;
-}
+};
 
 export const sendClassicPrompt = async (input: string[]) => {
-
   const openai = new OpenAI();
-  
-  const completion = await openai.listCompletion(input, {maxTokens: 1000});
+
+  const completion = await openai.listCompletion(input, { maxTokens: 1000 });
 
   return completion;
-}
+};

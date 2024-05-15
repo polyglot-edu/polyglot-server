@@ -1,8 +1,10 @@
 import { GameEngine, SmartCampusGameEngine } from "../gamification/gamification";
-import { PolyglotEdge, PolyglotFlow, PolyglotNode, PolyglotNodeValidation } from "../types";
+import { PolyglotEdge, PolyglotEdgeFailDebtData, PolyglotFlow, PolyglotNode, PolyglotNodeValidation } from "../types";
 import { getAbstractAlgorithm, getPathSelectorAlgorithm, pathSelectorMap } from "./algo/register";
 import { AbstractAlgorithm, DistrubutionAlgorithm } from "./algo/base";
 import { nodeTypeExecution } from "./plugins/pluginMap";
+
+const mapType={0:"OpenQuestionNode", 2: 'TrueFalseQuestionNode', 3: 'CloseEndedQuestioNode', 4: 'MultiChoiceQuestionNode'};
 
 export type ExecCtx = {
   flowId: string;
@@ -128,6 +130,27 @@ export class Execution {
     }
     // caso in cui sono appena entrato nella funzione e non sto eseguendo un nodo astratto
     if (satisfiedEdges) {
+      if(satisfiedEdges[0].type=='failDebtEdge'){//case where there is a debt in the fail edge
+        const debtEdgeData:PolyglotEdgeFailDebtData=satisfiedEdges[0].data;
+        const ghostNode:PolyglotNodeValidation={
+          _id: 'ghost',
+          description: 'This is a debt activity, complete it to proceed',
+          difficulty: 0,
+          runtimeData: 'ghost',
+          platform: 'webapp',
+          reactFlow: {},
+          title: 'Debt activity',
+          type: debtEdgeData.typeOfExercise,
+          data: {},
+          validation:{
+            id: "string",
+            title: "string",
+            code: "string",
+            data: {},
+            type: "string",}
+        };
+        return {ctx: this.ctx, node: ghostNode};
+      }
       const possibleNextNodes = satisfiedEdges.map(edge => this.flow.nodes.find(node => node.reactFlow.id === edge.reactFlow.target)) as PolyglotNode[];
 
       const {execNodeInfo, node} = this.algo.getNextExercise(possibleNextNodes);

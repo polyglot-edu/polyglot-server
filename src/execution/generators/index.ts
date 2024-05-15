@@ -1,34 +1,54 @@
 import { v4 } from "uuid";
-import { createResPrompt, createSubconceptsPrompt, sendClassicPrompt } from "../prompts";
-import { PolyglotConceptEdge, PolyglotConceptMap, PolyglotConceptNode } from "../../types";
+import {
+  createResPrompt,
+  createSubconceptsPrompt,
+  sendClassicPrompt,
+} from "../prompts";
+import {
+  PolyglotConceptEdge,
+  PolyglotConceptMap,
+  PolyglotConceptNode,
+} from "../../types";
 import { PolyglotNode } from "../../types";
 import { getMultipleChoiceRuntimeData } from "../../utils/nodes";
 
 export type GenResProps = {
   num_ex: number;
-  type_ex: 'quiz'| 'multiple choice' | 'open ended question' | 'close ended question' | 'true or false' | 'numerical';
+  type_ex:
+    | "quiz"
+    | "multiple choice"
+    | "open ended question"
+    | "close ended question"
+    | "true or false"
+    | "numerical";
   language: string;
   topic: string;
-  bloom_lv: 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
+  bloom_lv:
+    | "remember"
+    | "understand"
+    | "apply"
+    | "analyze"
+    | "evaluate"
+    | "create";
   num_choices?: number;
-  num_answer?: number
-}
+  num_answer?: number;
+};
 
 export const genGraphChatGpt = async (concept: string, depth: number) => {
-  const graph: PolyglotConceptMap = { nodes: [], edges: []};
+  const graph: PolyglotConceptMap = { nodes: [], edges: [] };
   await genGraphChatGptRec(graph, concept, null, depth);
 
   return graph;
-}
+};
 
 export const genResChatGpt = async (opts: GenResProps) => {
   let counter = 5;
-  while (counter > 0){
+  while (counter > 0) {
     try {
       const prompt = createResPrompt(opts);
-      console.log(prompt)
+      console.log(prompt);
 
-      if (!prompt) return ([] as PolyglotNode[]);
+      if (!prompt) return [] as PolyglotNode[];
 
       const answer = await sendClassicPrompt([prompt]);
       console.log(answer);
@@ -43,11 +63,11 @@ export const genResChatGpt = async (opts: GenResProps) => {
         title: "Openai generated node",
         runtimeData: getMultipleChoiceRuntimeData(data.choices, data.question),
         reactFlow: {
-          id: nodeId
+          id: nodeId,
         },
         type: "multipleChoiceQuestionNode",
         description: "",
-        difficulty: 1
+        difficulty: 1,
       }));
 
       return nodes;
@@ -58,19 +78,24 @@ export const genResChatGpt = async (opts: GenResProps) => {
     }
   }
 
-  const output: PolyglotNode[] = []
+  const output: PolyglotNode[] = [];
   return output;
-}
+};
 
-const genGraphChatGptRec = async (graph: PolyglotConceptMap, concept: string, parent: PolyglotConceptNode | null, depth: number) => {
+const genGraphChatGptRec = async (
+  graph: PolyglotConceptMap,
+  concept: string,
+  parent: PolyglotConceptNode | null,
+  depth: number,
+) => {
   let counter = 5;
-  while (counter > 0){
+  while (counter > 0) {
     try {
-      const node: PolyglotConceptNode = {_id: v4(), name: concept}
+      const node: PolyglotConceptNode = { _id: v4(), name: concept };
       graph.nodes.push(node);
 
       if (parent) {
-        const edge: PolyglotConceptEdge = {from: parent._id, to: node._id};
+        const edge: PolyglotConceptEdge = { from: parent._id, to: node._id };
         graph.edges.push(edge);
       }
 
@@ -82,18 +107,19 @@ const genGraphChatGptRec = async (graph: PolyglotConceptMap, concept: string, pa
 
       const subConcepts: string[] = JSON.parse(completion);
 
-      const promises = Promise.all(subConcepts.map(async (subConcept) => {
-        await genGraphChatGptRec(graph, subConcept, node, depth-1)
-      }))
+      const promises = Promise.all(
+        subConcepts.map(async (subConcept) => {
+          await genGraphChatGptRec(graph, subConcept, node, depth - 1);
+        }),
+      );
 
       await promises;
 
       counter = 0;
-
     } catch (err) {
       console.log(err);
       counter--;
       setTimeout(() => {}, 500);
     }
   }
-}
+};
