@@ -71,7 +71,7 @@ export async function startExecution(req: Request<{},any,StartExecutionBody>, re
       platform: firstNode.platform
     })
   } catch(err) {
-    next(err);
+    res.status(500).send(err);
   }
 
 
@@ -105,7 +105,7 @@ export async function getActualNode(req: Request<{},any, GetNextExerciseV2Body>,
 
     return res.status(200).json(actualNode.node);
   }catch(err) {
-    next(err);
+    res.status(500).send(err);
   }
 }
 
@@ -139,7 +139,7 @@ export async function getNextExercisev2(req: Request<{},any, GetNextExerciseV2Bo
 
     return res.status(200).json(firstNode);
   }catch(err) {
-    next(err);
+    res.status(500).send(err);
   }
 }
 
@@ -176,7 +176,7 @@ export async function getInitialExercise(req: Request<{}, any, GetInitialExercis
 
       return res.status(200).json(actualNode);
     }catch(err) {
-      next(err);
+      res.status(500).send(err);
     }
 }
 type GetNextExerciseBody = {
@@ -222,6 +222,6 @@ export async function getNextExercise(req: Request<{}, any, GetNextExerciseBody>
 
       return res.status(200).json(actualNode);
     }catch(err) {
-      next(err);
+      res.status(500).send(err);
     }
 }
