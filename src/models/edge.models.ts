@@ -84,7 +84,7 @@ export const failDebtEdgeSchema = new mongoose.Schema(
       conditionKind: { type: String, enum: ["fail"] },
       material: { type: String },
       macroSubject: { type: String },
-      topic: { type: String },
+      topic: { type: { Topic: String, description: String, Type: Number } },
       learningObjective: { type: String },
       title: { type: String },
       language: { type: String },

@@ -13,7 +13,11 @@ export type PolyglotEdgeFailDebtData = {
   conditionKind: string;
   material: string;
   macroSubject: string;
-  topic: string;
+  topic: {
+    Topic: string;
+    Type: Number;
+    Description: string;
+  };
   learningObjective: string;
   title: string;
   language: string;
