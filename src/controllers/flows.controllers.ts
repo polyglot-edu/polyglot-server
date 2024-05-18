@@ -140,7 +140,7 @@ export async function downloadNotebookVSCCTX(
   res.setHeader("Content-Length", file.length);
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename=notebook-${req.params.id}.dib`,
+    `attachment; filename=notebook-${req.params.ctxId}.dib`,
   );
   res.write(file, "binary");
   res.end();
