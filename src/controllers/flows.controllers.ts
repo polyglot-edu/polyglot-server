@@ -108,7 +108,7 @@ export async function downloadNotebookVSCCTX(req: Request, res: Response, next: 
 
   const file = Buffer.from(template);
   res.setHeader('Content-Length', file.length);
-  res.setHeader('Content-Disposition', `attachment; filename=notebook-${req.params.id}.dib`);
+  res.setHeader('Content-Disposition', `attachment; filename=${req.params.filename}`);
   res.write(file, 'binary');
   res.end();
 }
