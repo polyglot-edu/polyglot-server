@@ -91,7 +91,7 @@ export async function downloadNotebookVSC2(req: Request, res: Response, next: Ne
 
   const file = Buffer.from(template);
   res.setHeader('Content-Length', file.length);
-  res.setHeader('Content-Disposition', `attachment; filename=notebook-${req.params.id}.dib`);
+  res.setHeader('Content-Disposition', `attachment; filename=${req.params.filename}`);
   res.write(file, 'binary');
   res.end();
 }
