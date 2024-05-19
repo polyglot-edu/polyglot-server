@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import bodyParser from "body-parser";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
 import router from "./routes";
@@ -18,19 +18,21 @@ import { ENV } from "./utils/secrets";
 
 const app = express();
 
-if (ENV === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
+if (ENV === "production") {
+  app.set("trust proxy", 1); // trust first proxy
 }
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // automatically set cors origin header based on client request for faster developing
-    // TODO: check domain cors in production env
-    return callback(null, true);
-  },
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // automatically set cors origin header based on client request for faster developing
+      // TODO: check domain cors in production env
+      return callback(null, true);
+    },
+  }),
+);
 
-app.use(bodyParser.json({limit: "1mb"}));
+app.use(bodyParser.json({ limit: "1mb" }));
 app.use(loggerMiddleware);
 
 app.use(router);
