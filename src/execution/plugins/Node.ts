@@ -43,9 +43,9 @@ export type OpenQuestionNodeData = {
   material: string;
   possibleAnswer?: string;
 };
-  
+
 export const zip = <T, K>(a: T[], b: K[]) =>
-a.map((k, i) => ({ first: k, second: b[i] }));
+  a.map((k, i) => ({ first: k, second: b[i] }));
 
 // TODO: add type TextualQuestion or similar to standardize textual questions such as multiple choice, open questions, coding exercises, ecc.
 
@@ -62,4 +62,3 @@ export type WebAppContent = {
   content: any;
   priority?: number;
 };
-

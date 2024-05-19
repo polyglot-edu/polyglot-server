@@ -2,8 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { PolyglotConceptMap } from "../types/PolyglotConcept";
 import { PolyglotConceptMapModel } from "../models/concept.models";
 
-type CreateConceptMapBody = PolyglotConceptMap
-export async function createConceptMap(req: Request<{}, any, CreateConceptMapBody>, res: Response, next: NextFunction) {
+type CreateConceptMapBody = PolyglotConceptMap;
+export async function createConceptMap(
+  req: Request<{}, any, CreateConceptMapBody>,
+  res: Response,
+  next: NextFunction,
+) {
   const conceptMap = req.body;
 
   try {
@@ -15,7 +19,11 @@ export async function createConceptMap(req: Request<{}, any, CreateConceptMapBod
   }
 }
 
-export async function findConceptMapById(req: Request, res: Response, next: NextFunction) {
+export async function findConceptMapById(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const conceptMapId = req.params.id;
 
   try {

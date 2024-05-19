@@ -1,5 +1,5 @@
-import express from 'express';
-import * as OpenAiControllers from '../controllers/openai.controllers';
+import express from "express";
+import * as OpenAiControllers from "../controllers/openai.controllers";
 
 const router = express.Router();
 

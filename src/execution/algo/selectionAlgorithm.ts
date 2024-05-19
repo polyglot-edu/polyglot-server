@@ -5,7 +5,7 @@
 
 //     // TODO: add check currentNode and remove imposition type
 
-//     if (possibleNextNodes.length === 0 && currentNode.type !== "abstractNode") 
+//     if (possibleNextNodes.length === 0 && currentNode.type !== "abstractNode")
 //       return {
 //         ctx: this.ctx,
 //         node: null
@@ -26,9 +26,9 @@
 //               title: "pass",
 //               code: `async Task<(bool, string)> validate(PolyglotValidationContext context) {
 //                 var cmd = context.JourneyContext.SubmittedCode;
-                
+
 //                 var resp = await GamificationClient.Current.SendCommand(cmd);
-                    
+
 //                 return (resp, \"Pass/Fail edge\");
 //             }`,
 //               data: {
@@ -51,9 +51,9 @@
 //             title: "pass",
 //             code: `async Task<(bool, string)> validate(PolyglotValidationContext context) {
 //               var cmd = context.JourneyContext.SubmittedCode;
-              
+
 //               var resp = await GamificationClient.Current.SendCommand(cmd);
-                  
+
 //               return (resp, \"Pass/Fail edge\");
 //           }`,
 //             data: {

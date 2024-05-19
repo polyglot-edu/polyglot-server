@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
-import { GenResProps, createResPrompt, sendClassicPrompt } from "../execution/prompts";
+import {
+  GenResProps,
+  createResPrompt,
+  sendClassicPrompt,
+} from "../execution/prompts";
 import { genGraphChatGpt } from "../execution/generators";
 
-export async function genResource(req: Request<any, any, GenResProps>, res: Response){
+export async function genResource(
+  req: Request<any, any, GenResProps>,
+  res: Response,
+) {
   const promptOpts = req.body;
 
   const prompt = createResPrompt(promptOpts);
-  console.log(prompt)
+  console.log(prompt);
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt generation failed!" });
@@ -19,12 +26,17 @@ export async function genResource(req: Request<any, any, GenResProps>, res: Resp
     return res.status(200).json(output);
   } catch (error: any) {
     console.error(error);
-    return res.status(500).json({ error: "Invalid generated resources, please try again" });
+    return res
+      .status(500)
+      .json({ error: "Invalid generated resources, please try again" });
   }
 }
 
-export async function genConceptMap(req: Request<any, any, {topic: string; depth: number}>, res: Response){
-  const {topic, depth} = req.body;
+export async function genConceptMap(
+  req: Request<any, any, { topic: string; depth: number }>,
+  res: Response,
+) {
+  const { topic, depth } = req.body;
 
   if (!topic) {
     return res.status(400).json({ error: "Prompt generation failed!" });
