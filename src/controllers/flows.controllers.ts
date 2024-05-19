@@ -116,7 +116,7 @@ export async function downloadNotebookVSC2(
   res.setHeader("Content-Length", file.length);
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename=notebook-${req.params.id}.dib`,
+    `attachment; filename=${req.params.filename}`,
   );
   res.write(file, "binary");
   res.end();
@@ -140,7 +140,7 @@ export async function downloadNotebookVSCCTX(
   res.setHeader("Content-Length", file.length);
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename=notebook-${req.params.ctxId}.dib`,
+    `attachment; filename=${req.params.filename}`,
   );
   res.write(file, "binary");
   res.end();
