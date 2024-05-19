@@ -48,6 +48,10 @@ spec:
               value: {{ .Values.env.authIssuerUrl }}
             - name: AUTH0_AUDIENCE
               value: {{ .Values.env.authAudience }}
+            - name: APIKEY
+              value: {{ .Values.env.apiKey }}
+            - name: AIGENERATION
+              value: {{ .Values.env.AIGENERATION }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
