@@ -3,6 +3,8 @@ import PolyglotFlowModel from "../models/flow.model";
 import { v4 } from "uuid";
 import { ExecCtx, Execution } from "../execution/execution";
 import { start } from "repl";
+import Context from "../models/context.model";
+import User from "../models/user.model";
 
 type SendCommandBody = {
   ctxId: string;
@@ -11,6 +13,7 @@ type SendCommandBody = {
 
 type StartExecutionBody = {
   flowId: string;
+  username: string;
 }
 
 type GetInitialExerciseBody = { flowId: string }
@@ -19,6 +22,7 @@ type GetNextExerciseV2Body = {
   ctxId: string;
   satisfiedConditions: string[];
   flowId?: string;
+  username: string;
 }
 
 const ctxs: {[x: string] : ExecCtx} = {
@@ -40,6 +44,7 @@ export async function sendCommand(req: Request<{},any,SendCommandBody>, res: Res
 
 export async function startExecution(req: Request<{},any,StartExecutionBody>, res: Response, next: NextFunction) {
   const {flowId} = req.body;
+  const {username} = req.body;
 
   try {
     const flow = await PolyglotFlowModel.findById(flowId).populate(["nodes","edges"]);
@@ -64,7 +69,21 @@ export async function startExecution(req: Request<{},any,StartExecutionBody>, re
     const ctxId = v4();
 
     // TODO: add to database
-    ctxs[ctxId] = updatedCtx; 
+    ctxs[ctxId] = updatedCtx;
+
+    if (username) {
+      const user = await User.findOne({username: username});
+      if(!user) return res.status(404).json({message: "User not found"});
+
+      const context = new Context({
+        _id: ctxId,
+        flowId: flowId,
+        currentNodeId: firstNode._id,
+        username: username
+      });
+      await context.save();
+      await User.updateOne({username: username}, {$push: {contexts: ctxId}})
+    }
 
     return res.status(200).json({
       ctx: ctxId,
@@ -80,9 +99,24 @@ export async function startExecution(req: Request<{},any,StartExecutionBody>, re
 //return actualNode to execute
 export async function getActualNode(req: Request<{},any, GetNextExerciseV2Body>, res: Response, next: NextFunction) {
   const { ctxId, } = req.body;
+  const { username } = req.body;
   try {
 
-    const ctx = ctxs[ctxId];
+    var ctx = ctxs[ctxId];
+
+    if(username){
+      const user = await User.findOne({username: username});
+      if(!user) return res.status(404).json({message: "User not found"});
+      if(!user.contexts.includes(ctxId)) return res.status(404).json({message: "Ctx not found in that user!"});
+
+      const dbCtx = await Context.findById({_id: ctxId});
+      if(!dbCtx) return res.status(404).json({message: "Ctx not found in database!"});
+
+      ctx = Execution.createCtx(dbCtx.flowId, dbCtx.currentNodeId);
+      console.log(ctx.flowId, ctx.currentNodeId);
+      // possible missalignment and overwirtting between ctxs and db (depend on ids already in db and ctxs)
+      ctxs[ctxId] = ctx;
+    }
 
     if (!ctx) {
       return res.status(400).json({"error": "Ctx not found!"})
@@ -105,15 +139,30 @@ export async function getActualNode(req: Request<{},any, GetNextExerciseV2Body>,
 
     return res.status(200).json(actualNode.node);
   }catch(err) {
+    console.error(err);
     res.status(500).send(err);
   }
 }
 
 export async function getNextExercisev2(req: Request<{},any, GetNextExerciseV2Body>, res: Response, next: NextFunction) {
-  const { ctxId, satisfiedConditions, flowId } = req.body;
+  const { ctxId, satisfiedConditions, flowId, username } = req.body;
   try {
 
-    const ctx = ctxs[ctxId];
+    var ctx = ctxs[ctxId];
+
+    if(username){
+      const user = await User.findOne({username: username});
+      if(!user) return res.status(404).json({message: "User not found"});
+      if(!user.contexts.includes(ctxId)) return res.status(404).json({message: "Ctx not found in that user!"});
+
+      const dbCtx = await Context.findById({_id: ctxId});
+      if(!dbCtx) return res.status(404).json({message: "Ctx not found in database!"});
+
+      ctx = Execution.createCtx(dbCtx.flowId, dbCtx.currentNodeId);
+      console.log(ctx.flowId, ctx.currentNodeId);
+      // possible missalignment and overwirtting between ctxs and db (depend on ids already in db and ctxs)
+      ctxs[ctxId] = ctx;
+    }
 
     if (!ctx) {
       return res.status(400).json({"error": "Ctx not found!"})
@@ -133,6 +182,15 @@ export async function getNextExercisev2(req: Request<{},any, GetNextExerciseV2Bo
     if (!firstNode) {
         res.status(404).send();
         return;
+    }
+
+    if (username) {
+      const user = await User.findOne({username: username});
+      if(!user) return res.status(404).json({message: "User not found"});
+
+      console.log(updatedCtx.flowId, updatedCtx.currentNodeId);
+      
+      await Context.updateOne({_id: ctxId}, {currentNodeId: updatedCtx.currentNodeId});
     }
 
     ctxs[ctxId] = updatedCtx;
