@@ -218,7 +218,7 @@ export class Execution {
         const response = await API.generateNewExercise({
           macroSubject: debtEdgeData.macroSubject,
           level: debtEdgeData.level,
-          typeOfExercise: debtEdgeData.typeOfExercise,
+          typeOfActivity: debtEdgeData.typeOfExercise,
           bloomLevel: debtEdgeData.bloomLevel,
           language: debtEdgeData.language,
           material: debtEdgeData.material,
