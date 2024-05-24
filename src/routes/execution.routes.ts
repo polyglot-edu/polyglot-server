@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/first", ExecutionController.startExecution);
 router.post("/actual", ExecutionController.getActualNode);
 router.post("/next", ExecutionController.getNextExercisev2);
+router.post("/progress", ExecutionController.makeUserProgress)
 router.post("/cmd", ExecutionController.sendCommand);
 
 // router.post("/next", ExecutionController.getNextExercise)
