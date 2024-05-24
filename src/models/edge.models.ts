@@ -78,6 +78,15 @@ export const passFailEdgeSchema = new mongoose.Schema(
   options,
 );
 
+export const manuallyProgressEdgeSchema = new mongoose.Schema(
+  {
+    data: {
+      conditionKind: { type: String, enum: ["pass", "fail"] },
+    },
+  },
+  options,
+);
+
 export const failDebtEdgeSchema = new mongoose.Schema(
   {
     data: {
@@ -128,6 +137,11 @@ export const PassFailEdge = PolyglotEdgeModel.discriminator(
 export const FailDebtEdge = PolyglotEdgeModel.discriminator(
   "failDebtEdge",
   failDebtEdgeSchema,
+);
+
+export const ManuallyProgressEdge = PolyglotEdgeModel.discriminator(
+  "manuallyProgressEdge",
+  manuallyProgressEdgeSchema,
 );
 
 export const UnconditionalEdge = PolyglotEdgeModel.discriminator(
