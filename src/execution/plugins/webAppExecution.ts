@@ -152,6 +152,30 @@ function notImplementedNodeExecution(node: PolyglotNode) {
 }
 
 export function webAppExecution(node: PolyglotNode, ctx: string) {
+  if (node.platform == "Eraser") {
+    const challengeSetup: ChallengeSetup[] = [];
+
+    const challengeContent: ChallengeContent[] = [
+      {
+        type: "markdown",
+        content:
+          "You can do this activity in Eraser, please go in our workadventure world to complete it.",
+      },
+    ];
+    const webAppSpecifics: webAppSpecifics = {
+      webAppSetup: [],
+      webAppContent: [{ content: node.data, type: "Collaborative" }],
+    };
+    return {
+      ...node,
+      runtimeData: {
+        challengeSetup,
+        challengeContent,
+        webAppSpecifics,
+      },
+    };
+  }
+  
   const challengeSetup: ChallengeSetup[] = [];
 
   const challengeContent: ChallengeContent[] = [
