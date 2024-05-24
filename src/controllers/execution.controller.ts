@@ -26,7 +26,7 @@ type ProgressBody = {
   satisfiedConditions: string[];
   flowId?: string;
   authorId: string;
-}
+};
 
 const ctxs: { [x: string]: ExecCtx } = {
   prova: {
@@ -131,39 +131,49 @@ export async function getActualNode(
   }
 }
 
-export async function makeUserProgress(req: Request<{},any, ProgressBody>, res: Response, next: NextFunction) {
+export async function makeUserProgress(
+  req: Request<{}, any, ProgressBody>,
+  res: Response,
+  next: NextFunction,
+) {
   const { ctxId, satisfiedConditions, authorId } = req.body;
   try {
-
     const ctx = ctxs[ctxId];
 
     if (!ctx) {
-      return res.status(400).json({"error": "Ctx not found!"})
+      return res.status(400).json({ error: "Ctx not found!" });
     }
 
-    const flow = await PolyglotFlowModel.findById(ctx.flowId).populate(["nodes","edges"]);
+    const flow = await PolyglotFlowModel.findById(ctx.flowId).populate([
+      "nodes",
+      "edges",
+    ]);
 
     if (!flow) return res.status(404).send();
 
-    if(flow.author!=authorId && authorId!='admin') res.status(400).send('You need to be the author to unlock the progress');
+    if (flow.author != authorId && authorId != "admin")
+      res.status(400).send("You need to be the author to unlock the progress");
 
     if (satisfiedConditions.length === 0) return res.status(200).json(null);
 
     const algo = flow?.execution?.algo ?? "Random Execution";
 
-    const execution = new Execution({ctx, algo, flow});
+    const execution = new Execution({ ctx, algo, flow });
 
-    const {ctx: updatedCtx, node: firstNode} = await execution.getNextExercise(satisfiedConditions, ctxId);
+    const { ctx: updatedCtx, node: firstNode } =
+      await execution.getNextExercise(satisfiedConditions, ctxId);
 
     if (!firstNode) {
-        res.status(404).send();
-        return;
+      res.status(404).send();
+      return;
     }
 
     ctxs[ctxId] = updatedCtx;
 
-    return res.status(200).send('Success, the user progress had been registred');
-  }catch(err) {
+    return res
+      .status(200)
+      .send("Success, the user progress had been registred");
+  } catch (err) {
     next(err);
   }
 }
