@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/me", checkAuth, UserControllers.getUserInfo);
 router.post("/register", UserControllers.register);
 router.put("/me", UserControllers.updateUserInfo);
-router.get("/:username/flowsId", checkAuth, UserControllers.getUserFlowsId);
+//mettere userid
+router.get("/:userId/flowsId", checkAuth, UserControllers.getUserFlowsId);
 
 export default router;

@@ -23,21 +23,20 @@ export const register = async (req: Request, res: Response) => {
 
 export const updateUserInfo = async (req: Request, res: Response) => {
   try{
-    const { username } = req.body;
+    const { userId } = req.body;
     const learningPreferences = req.body.learningPreferences;
     const stats = req.body.stats;
+    const username = req.body.username;
 
-    const user: UserDocument | null = await User.findOne({username: username});
+    const user = await User.findById(userId);
 
     if(!user) return res.status(404).json({message: "User not found"});
 
-    if(learningPreferences){
-      user.learningPreferences = learningPreferences;
-    }
+    if(learningPreferences) user.learningPreferences = learningPreferences;
 
-    if(stats){
-      user.stats = stats;
-    }
+    if(username) user.username = username;
+
+    if(stats) user.stats = stats;
     
     await user.save();
     return res.json(user);
@@ -49,8 +48,8 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 
 export const getUserFlowsId = async (req: Request, res: Response) => {
   try{
-    const { username } = req.params;
-    const user = await User.findOne({username: username});
+    const { userId} = req.params;
+    const user = await User.findById(userId);
     if(!user) return res.status(404).json({message: "User not found"});
     return res.json(user.contexts);
   }catch(err){

@@ -44,6 +44,7 @@ export type UserDocument = Document & {
     learningPreferences: LearningPreferencesDocument;
     stats: StatsDocument;
     contexts: string[];
+    courses: string[];
 };
 
 const learningPreferencesSchema = new mongoose.Schema<LearningPreferencesDocument>({
@@ -95,7 +96,8 @@ const userSchema = new mongoose.Schema<UserDocument>({
     email: { type: String},
     learningPreferences:{type: learningPreferencesSchema, default: {}},
     stats: {type: statsSchema, default: {}},
-    contexts: [{type: String}]
+    contexts: [{type: String, ref: 'Context'}],
+    courses: [{type: String, ref: 'Course'}],
 })
 
 const User = mongoose.model<UserDocument>("User", userSchema);
