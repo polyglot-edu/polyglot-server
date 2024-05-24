@@ -8,23 +8,23 @@ export type ChallengeContent = {
 };
 
 export type PolyglotNode = {
-    _id: string;
-    type: string;
-    title: string;
-    description: string;
-    difficulty: number;
-    runtimeData: any;
-    platform: string;
-    data: any;
-    reactFlow: any;
+  _id: string;
+  type: string;
+  title: string;
+  description: string;
+  difficulty: number;
+  runtimeData: any;
+  platform: string;
+  data: any;
+  reactFlow: any;
 };
 
 export type PolyglotNodeValidation = PolyglotNode & {
-    validation: {
-      id: string;
-      title: string;
-      code: string;
-      data: any;
-      type: string;
-    }[]
-}
+  validation: {
+    id: string;
+    title: string;
+    code: string;
+    data: any;
+    type: string;
+  }[];
+};

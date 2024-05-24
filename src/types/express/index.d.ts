@@ -4,7 +4,7 @@ declare global {
   namespace Express {
     export interface Request {
       user?: UserDocument;
-      auth: {[x : string] : any} | undefined;
+      auth: { [x: string]: any } | undefined;
     }
   }
 }

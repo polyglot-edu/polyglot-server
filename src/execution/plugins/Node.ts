@@ -34,22 +34,18 @@ export type TrueFalseNodeData = {
 
 export type CloseEndedQuestionNodeData = {
   question: string;
+  textToFill?: string;
   correctAnswers: string[];
 };
 
 export type OpenQuestionNodeData = {
   question: string;
   material: string;
-  aiQuestion: boolean;
-  language?: string;
-  questionGenerated?: string;
   possibleAnswer?: string;
-  questionCategory?: number;
-  questionType?: number;
 };
-  
+
 export const zip = <T, K>(a: T[], b: K[]) =>
-a.map((k, i) => ({ first: k, second: b[i] }));
+  a.map((k, i) => ({ first: k, second: b[i] }));
 
 // TODO: add type TextualQuestion or similar to standardize textual questions such as multiple choice, open questions, coding exercises, ecc.
 
@@ -66,4 +62,3 @@ export type WebAppContent = {
   content: any;
   priority?: number;
 };
-

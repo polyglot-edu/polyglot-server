@@ -1,0 +1,11 @@
+dist
+node_modules
+charts
+.github
+Dockerfile
+.drone.yml
+docker-compose.yml
+tsconfig.json
+jest.config.js
+package-lock.json
+package.json
