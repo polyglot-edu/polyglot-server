@@ -175,7 +175,7 @@ export function webAppExecution(node: PolyglotNode, ctx: string) {
       },
     };
   }
-  
+
   const challengeSetup: ChallengeSetup[] = [];
 
   const challengeContent: ChallengeContent[] = [

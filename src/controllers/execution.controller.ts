@@ -28,6 +28,11 @@ type ProgressBody = {
   authorId: string;
 };
 
+type FlowCtxsBody = {
+  flowId: string;
+  userId: string;
+};
+
 const ctxs: { [x: string]: ExecCtx } = {
   prova: {
     gameId: "",
@@ -131,7 +136,45 @@ export async function getActualNode(
   }
 }
 
-export async function makeUserProgress(
+export async function getFlowCtxs(
+  req: Request<{}, any, FlowCtxsBody>,
+  res: Response,
+  next: NextFunction,
+) {
+  const { flowId, userId } = req.body;
+  try {
+    const flow = await PolyglotFlowModel.findById(flowId).populate([
+      "nodes",
+      "edges",
+    ]);
+
+    if (!flow) return res.status(404).send();
+
+    if (flow.author != userId && userId != "admin")
+      res.status(400).send("You need to be the author to see the progress");
+
+    // Utilizza Object.entries per ottenere un array di coppie [chiave, valore]
+    const matchingEntries = Object.entries(ctxs).filter(
+      ([key, ctx]) => ctx.flowId === flowId,
+    );
+
+    const matchingCtxs = matchingEntries.map(([key, ctx]) => {
+      if (
+        flow.edges
+          .filter((edge) => edge.type == "manuallyProgressEdge")
+          .find((edge) => edge.reactFlow.source == ctx.currentNodeId)
+      ){
+        return {ctx, key};}        
+    }).filter((ctx)=>ctx!=null);
+    console.log(matchingCtxs);
+    if (matchingCtxs) return res.status(200).send(matchingCtxs);
+    return res.status(204).send("Any user found");
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function progressExecution(
   req: Request<{}, any, ProgressBody>,
   res: Response,
   next: NextFunction,
