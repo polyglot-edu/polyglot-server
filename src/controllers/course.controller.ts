@@ -229,7 +229,7 @@ export async function unenrollCourse(req: Request, res: Response) {
 
 export async function getCourses(req: Request, res: Response) {
     try {
-        const courses = await Course.find().populate("flows",{_id:1, title:1});
+        const courses = await Course.find().populate("flows");
         return res.json(courses);
     } catch (err) {
         console.error(err);
