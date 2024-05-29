@@ -27,6 +27,7 @@ const mapType = {
 
 export type ExecCtx = {
   flowId: string;
+  username?: string;
   userId: string | null;
   gameId: string;
   currentNodeId: string;
@@ -69,17 +70,19 @@ export class Execution {
     flowId: string,
     currentNodeId: string,
     userId?: string,
+    username?: string,
   ) {
     return {
       flowId: flowId,
       userId: userId ?? null,
       currentNodeId: currentNodeId,
+      username: username ?? null,
       execNodeInfo: {},
     } as ExecCtx;
   }
 
   // TODO: check if the first node is an abstract node
-  public getFirstExercise(): {
+  public getFirstExercise(username?: string): {
     ctx: ExecCtx;
     node: PolyglotNodeValidation | null;
   } {
@@ -103,7 +106,12 @@ export class Execution {
       (edge) => edge.reactFlow.source === firstNode.reactFlow.id,
     );
 
-    const ctx = Execution.createCtx(this.flow._id, firstNode._id);
+    const ctx = Execution.createCtx(
+      this.flow._id,
+      firstNode._id,
+      undefined,
+      username,
+    );
 
     const actualNode: PolyglotNodeValidation = {
       ...nodeTypeExecution(

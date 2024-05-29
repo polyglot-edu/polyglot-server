@@ -253,6 +253,17 @@ export const ImageEvaluationNodeSchema = new mongoose.Schema(
   options,
 );
 
+export const CollaborativeModelingNodeSchema = new mongoose.Schema(
+  {
+    data: {
+      link: { type: String },
+      assignment: { type: String },
+      scheme: { type: String },
+    },
+  },
+  options,
+);
+
 export const CasesEvaluationNodeSchema = new mongoose.Schema(
   {
     data: {
@@ -370,6 +381,11 @@ export const TrueFalseNode = PolyglotNodeModel.discriminator(
 export const ImageEvaluationNode = PolyglotNodeModel.discriminator(
   "ImageEvaluationNode",
   ImageEvaluationNodeSchema,
+);
+
+export const CollaborativeModelingNode = PolyglotNodeModel.discriminator(
+  "CollaborativeModelingNode",
+  CollaborativeModelingNodeSchema,
 );
 
 export const CasesEvaluationNode = PolyglotNodeModel.discriminator(

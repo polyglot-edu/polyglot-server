@@ -11,6 +11,7 @@ type SendCommandBody = {
 
 type StartExecutionBody = {
   flowId: string;
+  username?: string;
 };
 
 type GetInitialExerciseBody = { flowId: string };
@@ -26,7 +27,12 @@ type ProgressBody = {
   satisfiedConditions: string[];
   flowId?: string;
   authorId: string;
-}
+};
+
+type FlowCtxsBody = {
+  flowId: string;
+  userId: string;
+};
 
 const ctxs: { [x: string]: ExecCtx } = {
   prova: {
@@ -54,7 +60,7 @@ export async function startExecution(
   res: Response,
   next: NextFunction,
 ) {
-  const { flowId } = req.body;
+  const { flowId, username } = req.body;
 
   try {
     const flow = await PolyglotFlowModel.findById(flowId).populate([
@@ -72,7 +78,8 @@ export async function startExecution(
     const execution = new Execution({ ctx, algo, flow });
 
     // get first available node
-    const { ctx: updatedCtx, node: firstNode } = execution.getFirstExercise();
+    const { ctx: updatedCtx, node: firstNode } =
+      execution.getFirstExercise(username);
 
     if (!firstNode) {
       return res.status(404).send();
@@ -131,39 +138,77 @@ export async function getActualNode(
   }
 }
 
-export async function makeUserProgress(req: Request<{},any, ProgressBody>, res: Response, next: NextFunction) {
-  const { ctxId, satisfiedConditions, authorId } = req.body;
+export async function getFlowCtxs(
+  req: Request<{}, any, FlowCtxsBody>,
+  res: Response,
+  next: NextFunction,
+) {
+  const { flowId, userId } = req.body;
   try {
-
-    const ctx = ctxs[ctxId];
-
-    if (!ctx) {
-      return res.status(400).json({"error": "Ctx not found!"})
-    }
-
-    const flow = await PolyglotFlowModel.findById(ctx.flowId).populate(["nodes","edges"]);
+    const flow = await PolyglotFlowModel.findById(flowId).populate([
+      "nodes",
+      "edges",
+    ]);
 
     if (!flow) return res.status(404).send();
 
-    if(flow.author!=authorId && authorId!='admin') res.status(400).send('You need to be the author to unlock the progress');
+    if (flow.author != userId && userId != "admin")
+      res.status(400).send("You need to be the author to see the progress");
+
+    // Utilizza Object.entries per ottenere un array di coppie [chiave, valore]
+    const matchingEntries = Object.entries(ctxs).filter(
+      ([key, ctx]) => ctx.flowId === flowId,
+    );
+
+    const matchingCtxs = matchingEntries.map(([key, ctx]) => ({ ctx, key }));
+    if (matchingCtxs) return res.status(200).send(matchingCtxs);
+    return res.status(204).send("Any user found");
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function progressExecution(
+  req: Request<{}, any, ProgressBody>,
+  res: Response,
+  next: NextFunction,
+) {
+  const { ctxId, satisfiedConditions, authorId } = req.body;
+  try {
+    const ctx = ctxs[ctxId];
+
+    if (!ctx) {
+      return res.status(400).json({ error: "Ctx not found!" });
+    }
+
+    const flow = await PolyglotFlowModel.findById(ctx.flowId).populate([
+      "nodes",
+      "edges",
+    ]);
+
+    if (!flow) return res.status(404).send();
+
+    if (flow.author != authorId && authorId != "admin")
+      res.status(400).send("You need to be the author to unlock the progress");
 
     if (satisfiedConditions.length === 0) return res.status(200).json(null);
 
     const algo = flow?.execution?.algo ?? "Random Execution";
 
-    const execution = new Execution({ctx, algo, flow});
+    const execution = new Execution({ ctx, algo, flow });
 
-    const {ctx: updatedCtx, node: firstNode} = await execution.getNextExercise(satisfiedConditions, ctxId);
+    const { ctx: updatedCtx, node: firstNode } =
+      await execution.getNextExercise(satisfiedConditions, ctxId);
 
     if (!firstNode) {
-        res.status(404).send();
-        return;
+      res.status(404).send();
+      return;
     }
 
     ctxs[ctxId] = updatedCtx;
 
-    return res.status(200).send('Success, the user progress had been registred');
-  }catch(err) {
+    return res.status(200).json(firstNode);
+  } catch (err) {
     next(err);
   }
 }
