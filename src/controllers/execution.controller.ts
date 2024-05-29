@@ -60,7 +60,7 @@ export async function startExecution(
   res: Response,
   next: NextFunction,
 ) {
-  const { flowId , username } = req.body;
+  const { flowId, username } = req.body;
 
   try {
     const flow = await PolyglotFlowModel.findById(flowId).populate([
@@ -78,7 +78,8 @@ export async function startExecution(
     const execution = new Execution({ ctx, algo, flow });
 
     // get first available node
-    const { ctx: updatedCtx, node: firstNode } = execution.getFirstExercise(username);
+    const { ctx: updatedCtx, node: firstNode } =
+      execution.getFirstExercise(username);
 
     if (!firstNode) {
       return res.status(404).send();
@@ -159,15 +160,7 @@ export async function getFlowCtxs(
       ([key, ctx]) => ctx.flowId === flowId,
     );
 
-    const matchingCtxs = matchingEntries.map(([key, ctx]) => {
-      if (
-        flow.edges
-          .filter((edge) => edge.type == "manuallyProgressEdge")
-          .find((edge) => edge.reactFlow.source == ctx.currentNodeId)
-      ){
-        return {ctx, key};}        
-    }).filter((ctx)=>ctx!=null);
-    console.log(matchingCtxs);
+    const matchingCtxs = matchingEntries.map(([key, ctx]) => ({ ctx, key }));
     if (matchingCtxs) return res.status(200).send(matchingCtxs);
     return res.status(204).send("Any user found");
   } catch (err) {
@@ -214,9 +207,7 @@ export async function progressExecution(
 
     ctxs[ctxId] = updatedCtx;
 
-    return res
-      .status(200)
-      .send("Success, the user progress had been registred");
+    return res.status(200).json(firstNode);
   } catch (err) {
     next(err);
   }

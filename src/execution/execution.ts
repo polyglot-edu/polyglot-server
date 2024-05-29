@@ -106,7 +106,12 @@ export class Execution {
       (edge) => edge.reactFlow.source === firstNode.reactFlow.id,
     );
 
-    const ctx = Execution.createCtx(this.flow._id, firstNode._id, undefined, username);
+    const ctx = Execution.createCtx(
+      this.flow._id,
+      firstNode._id,
+      undefined,
+      username,
+    );
 
     const actualNode: PolyglotNodeValidation = {
       ...nodeTypeExecution(
