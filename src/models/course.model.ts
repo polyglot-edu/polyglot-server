@@ -22,7 +22,7 @@ const courseSchema = new mongoose.Schema<CourseDocument>({
     },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    author: { type: String, required: true },
+    author: { type: String, required: true, ref: 'User'},
     flows: [{ type: String, ref: 'Flow' }],
 });
 

@@ -5,8 +5,9 @@ import Flow from "../models/flow.model";
 
 
 export async function createCourse(req: Request, res: Response) {
-    const { userId } = req.params;
+    const userId = req.user?._id;
     const { title, description, flows } = req.body;
+
     try {
         if (!userId) {
             return res.status(400).send("userId is required");
@@ -20,29 +21,33 @@ export async function createCourse(req: Request, res: Response) {
         if(await Course.findOne({title: title})) {
             return res.status(400).send("Course already exists");
         }
-
+/*      IMPLEMENT THIS LATER
         let flowsNotFound: string[] = [];
-        
-        for (const flow of flows) {
-            const dbflow = await Flow.findOne({ _id: flow });
-            if (!dbflow) {
-                flowsNotFound.push(flow);
+        console.log(flows);
+        if(flows.length > 0){
+            for (const flow of flows) {
+                const dbflow = await Flow.findOne({ _id: flow });
+                if (!dbflow) {
+                    flowsNotFound.push(flow);
+                }
             }
         }
-        
+     
         if (flowsNotFound.length > 0) {
             return res.status(404).send("Flows " + flowsNotFound.join(", ") + " not found");
         }
-
+*/
         const course = new Course({
             title: title,
             description: description,
             author: userId,
         });
-
+/*
         for (const flow of flows) {
             course.flows.push(flow);
         }
+*/
+        console.log(course);
         await course.save();
 
 
@@ -54,7 +59,8 @@ export async function createCourse(req: Request, res: Response) {
 }
 
 export async function deleteCourse(req: Request, res: Response) {
-    const { userId, courseId } = req.params;
+    const courseId = req.params.id;
+    const userId = req.user?._id;
     try {
         if (!userId) {
             return res.status(400).send("userId is required");
@@ -165,7 +171,8 @@ export async function addFlow(req: Request, res: Response) {
 }
 
 export async function enrollCourse(req: Request, res: Response) {
-    const { userId, courseId } = req.params;
+    const courseId = req.params.id;
+    const userId = req.user?._id;
     try {
         if (!userId) {
             return res.status(400).send("userId is required");
@@ -229,7 +236,15 @@ export async function unenrollCourse(req: Request, res: Response) {
 
 export async function getCourses(req: Request, res: Response) {
     try {
-        const courses = await Course.find().populate("flows");
+        const q = req.query?.q?.toString();
+        const me = req.query?.me?.toString();
+        const query: any = q ? {title: {$regex: q, $options: "i"}} : {}
+
+        if (me) {
+            query.author = req.user?._id
+        }
+
+        const courses = await Course.find(query).populate('author').populate('flows');
         return res.json(courses);
     } catch (err) {
         console.error(err);
