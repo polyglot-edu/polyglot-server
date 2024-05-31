@@ -1,5 +1,6 @@
 import express from "express";
 import flowRouter from "./flows.routes";
+import courseRouter from "./course.routes";
 import executionRouter from "./execution.routes";
 import userRouter from "./user.routes";
 import searchRouter from "./search.routes";
@@ -10,6 +11,7 @@ import conceptRouter from "./concept.routes";
 const router = express.Router();
 
 router.use("/api/flows", flowRouter);
+router.use("/api/course", courseRouter);
 router.use("/api/execution", executionRouter);
 router.use("/api/user", userRouter);
 router.use("/api/search", searchRouter);
