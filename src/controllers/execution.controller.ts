@@ -191,8 +191,9 @@ export async function progressExecution(
     if (flow.author != authorId && authorId != "admin")
       res.status(400).send("You need to be the author to unlock the progress");
 
-    if(!satisfiedConditions) return res.status(404).send('Error satisfied conditions missing');
-    
+    if (!satisfiedConditions)
+      return res.status(404).send("Error satisfied conditions missing");
+
     if (satisfiedConditions.length === 0) return res.status(200).json(null);
 
     const algo = flow?.execution?.algo ?? "Random Execution";
@@ -214,7 +215,6 @@ export async function progressExecution(
     next(err);
   }
 }
-
 
 export async function resetProgress(
   req: Request<{}, any, ProgressBody>,
@@ -238,12 +238,12 @@ export async function resetProgress(
 
     if (flow.author != authorId && authorId != "admin")
       res.status(400).send("You need to be the author to unlock the progress");
-    
-    //delete context with ctxId==ctx
-    //idea: ctxs[ctxId] remove    
-    Object.entries(ctxs).reduce
 
-    return res.status(200).send('Execution resetted correctly');
+    //delete context with ctxId==ctx
+    //idea: ctxs[ctxId] remove
+    // Object.entries(ctxs).splice()
+
+    return res.status(200).send("Execution resetted correctly");
   } catch (err) {
     next(err);
   }
