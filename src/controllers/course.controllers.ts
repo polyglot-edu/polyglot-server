@@ -5,12 +5,17 @@ import Flow from "../models/flow.model";
 
 export async function createCourse(req: Request, res: Response) {
   const userId = req.user?._id;
-  const { title, description, flows } = req.body;
+  const { title, description, flowsId } = req.body;
 
   try {
     if (!userId) {
       return res.status(400).send("userId is required");
     }
+
+    if(!title) res.status(400).send("title is required");
+
+    
+    if(!description) res.status(400).send("description is required");
 
     const user = await User.findById(userId);
     if (!user) {
@@ -22,9 +27,9 @@ export async function createCourse(req: Request, res: Response) {
     }
     /*      IMPLEMENT THIS LATER
         let flowsNotFound: string[] = [];
-        console.log(flows);
-        if(flows.length > 0){
-            for (const flow of flows) {
+        console.log(flowsId);
+        if(flowsId.length > 0){
+            for (const flow of flowsId) {
                 const dbflow = await Flow.findOne({ _id: flow });
                 if (!dbflow) {
                     flowsNotFound.push(flow);
@@ -42,12 +47,15 @@ export async function createCourse(req: Request, res: Response) {
       author: userId,
     });
 
-    if (flows) for (const flow of flows) course.flows.push(flow);
+    if (flowsId) for (const flow of flowsId) if (flow!=null) course.flows.push(flow);
 
     console.log(course);
     await course.save();
+    const courseRes = await Course.find({title: course.title})
+    .populate("author")
+    .populate("flows");
 
-    return res.status(201).json(course);
+    return res.status(201).json(courseRes);
   } catch (err) {
     console.error(err);
     res.status(500).send;
@@ -93,7 +101,7 @@ export async function getCourses(req: Request, res: Response) {
     const q = req.query?.q?.toString();
     const me = req.query?.me?.toString();
     const query: any = q ? { title: { $regex: q, $options: "i" } } : {};
-
+ 
     if (me) {
       query.author = req.user?._id;
     }
