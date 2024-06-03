@@ -7,8 +7,10 @@ import searchRouter from "./search.routes";
 import metadataRouter from "./metadata.routes";
 import openaiRouter from "./openai.routes";
 import conceptRouter from "./concept.routes";
+import cors from "cors";
 
 const router = express.Router();
+router.use(cors());
 
 router.use("/api/flows", flowRouter);
 router.use("/api/course", courseRouter);
