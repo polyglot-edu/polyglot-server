@@ -11,7 +11,7 @@ router.post("/actual", ExecutionController.getActualNode);
 router.post("/next", ExecutionController.getNextExercisev2);
 router.post("/progressInfo", ExecutionController.getFlowCtxs);
 router.post("/progressAction", ExecutionController.progressExecution);
-router.post("/resetProgress", ExecutionController.progressExecution);
+router.post("/resetProgress", ExecutionController.resetExecution);
 router.post("/cmd", ExecutionController.sendCommand);
 
 // router.post("/next", ExecutionController.getNextExercise)
