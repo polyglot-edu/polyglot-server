@@ -152,14 +152,14 @@ function notImplementedNodeExecution(node: PolyglotNode) {
 }
 
 export function webAppExecution(node: PolyglotNode, ctx: string) {
-  if (node.platform == "Eraser") {
+  if (node.platform == "Eraser" || node.platform == "PapyrusWeb") {
     const challengeSetup: ChallengeSetup[] = [];
 
     const challengeContent: ChallengeContent[] = [
       {
         type: "markdown",
         content:
-          "You can do this activity in Eraser, please go in our workadventure world to complete it.",
+          "You can do this activity in WorkAdventure, please go in our world to complete it.",
       },
     ];
     const webAppSpecifics: webAppSpecifics = {
