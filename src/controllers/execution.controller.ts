@@ -155,11 +155,9 @@ export async function getFlowCtxs(
     if (flow.author != userId && userId != "admin")
       res.status(400).send("You need to be the author to see the progress");
 
-
-    
     // Utilizza Object.entries per ottenere un array di coppie [chiave, valore]
-    const matchingEntries = Object.entries(ctxs).filter(
-      ([key, ctx]) => ctx ? ctx.flowId === flowId : false,
+    const matchingEntries = Object.entries(ctxs).filter(([key, ctx]) =>
+      ctx ? ctx.flowId === flowId : false,
     );
 
     const matchingCtxs = matchingEntries.map(([key, ctx]) => ({ ctx, key }));
@@ -172,33 +170,33 @@ export async function getFlowCtxs(
 export async function resetExecution(
   req: Request<{}, any, ProgressBody>,
   res: Response,
-  next: NextFunction,) {
-    const { ctxId, authorId } = req.body;
-  
-    try {
-      const ctx = ctxs[ctxId];
-  
-      if (!ctx) {
-        return res.status(400).json({ error: "Ctx not found!" });
-      }
-  
-      const flow = await PolyglotFlowModel.findById(ctx.flowId).populate([
-        "nodes",
-        "edges",
-      ]);
-  
-      if (!flow) return res.status(404).send();
-  
-      if (flow.author != authorId && authorId != "admin")
-        res.status(400).send("You need to be the author to reset the progress");
-  
-      ctxs[ctxId] = undefined;
+  next: NextFunction,
+) {
+  const { ctxId, authorId } = req.body;
 
-      return res.status(200).json('The user context had been canceled');
-    } catch (err) {
-      next(err);
+  try {
+    const ctx = ctxs[ctxId];
+
+    if (!ctx) {
+      return res.status(400).json({ error: "Ctx not found!" });
     }
-  
+
+    const flow = await PolyglotFlowModel.findById(ctx.flowId).populate([
+      "nodes",
+      "edges",
+    ]);
+
+    if (!flow) return res.status(404).send();
+
+    if (flow.author != authorId && authorId != "admin")
+      res.status(400).send("You need to be the author to reset the progress");
+
+    ctxs[ctxId] = undefined;
+
+    return res.status(200).json("The user context had been canceled");
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function progressExecution(
