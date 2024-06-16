@@ -11,8 +11,6 @@ import cors from "cors";
 
 const router = express.Router();
 
-router.use(cors({ credentials : true }));
-
 router.use("/api/flows", flowRouter);
 router.use("/api/course", courseRouter);
 router.use("/api/execution", executionRouter);
