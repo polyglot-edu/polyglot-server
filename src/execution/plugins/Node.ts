@@ -38,6 +38,11 @@ export type CloseEndedQuestionNodeData = {
   correctAnswers: string[];
 };
 
+export type CollaborativeModelingnNodeData = {
+  assignment: string;
+  scheme: string;  
+};
+
 export type OpenQuestionNodeData = {
   question: string;
   material: string;
