@@ -43,6 +43,13 @@ export type CollaborativeModelingnNodeData = {
   scheme: string;  
 };
 
+export type UMLModelingnNodeData = {
+  assignment: string;
+  idUML: string;
+  projectUML: string;
+  typeExercise: string;
+};
+
 export type OpenQuestionNodeData = {
   question: string;
   material: string;

@@ -264,6 +264,16 @@ export const CollaborativeModelingNodeSchema = new mongoose.Schema(
   options,
 );
 
+export const UMLModelingNodeSchema = new mongoose.Schema(
+  {
+      assignment: { type: String },
+      idUML: { type: String },
+      projectUML: { type: String },
+      typeExercise: { type: String },    
+  },
+  options,
+);
+
 export const CasesEvaluationNodeSchema = new mongoose.Schema(
   {
     data: {
@@ -386,6 +396,11 @@ export const ImageEvaluationNode = PolyglotNodeModel.discriminator(
 export const CollaborativeModelingNode = PolyglotNodeModel.discriminator(
   "CollaborativeModelingNode",
   CollaborativeModelingNodeSchema,
+);
+
+export const UMLModelingNode = PolyglotNodeModel.discriminator(
+  "UMLModelingNode",
+  UMLModelingNodeSchema,
 );
 
 export const CasesEvaluationNode = PolyglotNodeModel.discriminator(
