@@ -285,8 +285,6 @@ export async function saveAICourse(req: Request, res: Response) {
         
         const updatedNode = await PolyglotNodeModel.findByIdAndUpdate(savedNode._id, { $set: { reactFlow } }, { new: true });
         nodes.push((savedNode)._id);
-
-        console.log("nodo ", updatedNode);
       });
       
       await Promise.all(nodePromises);
