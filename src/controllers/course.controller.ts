@@ -3,7 +3,7 @@ import User from "../models/user.model";
 import Course from "../models/course.model";
 import Flow from "../models/flow.model";
 import { CloseEndedQuestionNode, LessonTextNode, MultipleChoiceQuestionNode, OpenQuestionNode, PolyglotNodeModel, ReadMaterialNode, TrueFalseNode } from "../models/node.model";
-import { UnconditionalEdge } from "../models/edge.models";
+import { PassFailEdge, PolyglotEdgeModel, UnconditionalEdge } from "../models/edge.models";
 
 export async function createCourse(req: Request, res: Response) {
   const userId = req.user?._id;
@@ -292,39 +292,41 @@ export async function saveAICourse(req: Request, res: Response) {
       // generate edges based on the activities
       for (var i = 0; i < nodes.length-1; i++) {
         var edge;
+        const passEdge = `async Task<(bool, string)> validate(PolyglotValidationContext context) {
+          var getMultipleChoiceAnswer = () => {
+            var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;
+            var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))
+                                                                                            .Where(c => bool.Parse(c.c.ToString()))
+                                                                                            .Select(c => (c.i + 1).ToString())
+                                                                                            .ToHashSet();
+            return submitted.SetEquals(answersCorrect);
+          };
+
+          var isSubmissionCorrect = context.Exercise.NodeType switch
+          {
+            "multipleChoiceQuestionNode" => getMultipleChoiceAnswer(),
+            _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),
+          };
+
+          var conditionKind = context.Condition.Data.conditionKind switch
+          {
+            "pass" => true,
+            "fail" => false,
+            _ => throw new Exception("Unknown condition kind")
+          };
+          return (conditionKind == isSubmissionCorrect, "Pass/Fail edge");
+        }`;
         switch(lesson.activities[i].lessonType) {
           case "Learning":
             edge = new UnconditionalEdge({
               code: "async Task<(bool, string)> validate(PolyglotValidationContext context) {return (true, \"Unconditional edge\");}",
-              reactFlow: {
-                source: nodes[i],
-                target: nodes[i+1],
-                type: "unconditionalEdge",
-                markerEnd:{
-                  type: "arrow",
-                  width: 25,
-                  height: 25,
-                },
-                selected: false,
-              }
             });
           break;
           case "Assessment":
           break;
           default:
-            edge = new UnconditionalEdge({
-              code: "async Task<(bool, string)> validate(PolyglotValidationContext context) {return (true, \"Unconditional edge\");}",
-              reactFlow: {
-                source: nodes[i],
-                target: nodes[i+1],
-                type: "unconditionalEdge",
-                markerEnd:{
-                  type: "arrow",
-                  width: 25,
-                  height: 25,
-                },
-                selected: false,
-              }
+            edge = new PassFailEdge({
+              code: passEdge,
             });
         }
 
@@ -333,9 +335,23 @@ export async function saveAICourse(req: Request, res: Response) {
           throw new Error("Edge is undefined");
         }
         
-        const savedEdge = await edge.save();
-        //await savedEdge.updateOne({ _id: savedEdge._id }, { $set: {reactFlow:{...edge.reactFlow}}});
+        const reactFlow = {
+          id: edge._id,
+          source: nodes[i],
+          target: nodes[i+1],
+          type: "unconditionalEdge",
+          markerEnd:{
+            type: "arrow",
+            width: 25,
+            height: 25,
+          },
+          selected: false,
+        }
 
+        const savedEdge = await edge.save();
+
+        await PolyglotEdgeModel.findByIdAndUpdate(savedEdge._id, { $set: { reactFlow } }, { new: true });
+        
         edges.push(savedEdge._id);
       }
 
