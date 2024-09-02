@@ -12,10 +12,9 @@ export async function createCourse(req: Request, res: Response) {
       return res.status(400).send("userId is required");
     }
 
-    if(!title) res.status(400).send("title is required");
+    if (!title) res.status(400).send("title is required");
 
-    
-    if(!description) res.status(400).send("description is required");
+    if (!description) res.status(400).send("description is required");
 
     const user = await User.findById(userId);
     if (!user) {
@@ -47,13 +46,14 @@ export async function createCourse(req: Request, res: Response) {
       author: userId,
     });
 
-    if (flowsId) for (const flow of flowsId) if (flow!=null) course.flows.push(flow);
+    if (flowsId)
+      for (const flow of flowsId) if (flow != null) course.flows.push(flow);
 
     console.log(course);
     await course.save();
-    const courseRes = await Course.find({title: course.title})
-    .populate("author")
-    .populate("flows");
+    const courseRes = await Course.find({ title: course.title })
+      .populate("author")
+      .populate("flows");
 
     return res.status(201).json(courseRes);
   } catch (err) {
@@ -101,7 +101,7 @@ export async function getCourses(req: Request, res: Response) {
     const q = req.query?.q?.toString();
     const me = req.query?.me?.toString();
     const query: any = q ? { title: { $regex: q, $options: "i" } } : {};
- 
+
     if (me) {
       query.author = req.user?._id;
     }

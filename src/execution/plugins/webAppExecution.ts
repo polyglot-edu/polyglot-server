@@ -15,7 +15,7 @@ import {
 
 type webAppSpecifics = {
   webAppSetup: WebAppSetup[];
-  webAppContent: WebAppContent[];
+  webAppContent: WebAppContent;
 };
 
 //LessonTextNodeData Execution block
@@ -24,9 +24,7 @@ function lessonTextNodeExecution(node: PolyglotNode) {
   const data = node.data as LessonTextNodeData;
   const webAppSetup: WebAppSetup[] = [];
 
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "LessonText" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -41,9 +39,7 @@ function readMaterialNodeExecution(node: PolyglotNode) {
 
   const webAppSetup: WebAppSetup[] = [];
 
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "ReadMaterial" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -57,9 +53,7 @@ function closeEndedQuestionNodeExecution(node: PolyglotNode) {
 
   const webAppSetup: WebAppSetup[] = [];
 
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "CloseEndedQuestion" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -73,9 +67,7 @@ function openQuestionNodeExecution(node: PolyglotNode) {
 
   const webAppSetup: WebAppSetup[] = [];
 
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "OpenQuestion" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -87,9 +79,7 @@ function openQuestionNodeExecution(node: PolyglotNode) {
 function multipleChoiceQuestionNodeExecution(node: PolyglotNode) {
   const data = node.data as MultipleChoiceQuestionNodeData;
   const webAppSetup: WebAppSetup[] = [];
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "MultChoiceQuestion" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -101,7 +91,7 @@ function multipleChoiceQuestionNodeExecution(node: PolyglotNode) {
 function trueFalseNodeExecution(node: PolyglotNode) {
   const data = node.data as TrueFalseNodeData;
   const webAppSetup: WebAppSetup[] = [];
-  const webAppContent: WebAppContent[] = [{ content: data, type: "TrueFalse" }];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -113,9 +103,7 @@ function trueFalseNodeExecution(node: PolyglotNode) {
 function watchVideoNodeExecution(node: PolyglotNode) {
   const data = node.data as TextLinkNodeData;
   const webAppSetup: WebAppSetup[] = [];
-  const webAppContent: WebAppContent[] = [
-    { content: data, type: "WatchVideo" },
-  ];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -126,7 +114,7 @@ function watchVideoNodeExecution(node: PolyglotNode) {
 function summaryNodeExecution(node: PolyglotNode) {
   const data = node.data as TextLinkNodeData;
   const webAppSetup: WebAppSetup[] = [];
-  const webAppContent: WebAppContent[] = [{ content: data, type: "Summary" }];
+  const webAppContent: WebAppContent = { content: data };
 
   return {
     webAppSetup,
@@ -136,14 +124,12 @@ function summaryNodeExecution(node: PolyglotNode) {
 
 function notImplementedNodeExecution(node: PolyglotNode) {
   const webAppSetup: WebAppSetup[] = [];
-  const webAppContent: WebAppContent[] = [
-    {
+  const webAppContent: WebAppContent = {
       content:
         "This node type is not implemented for WebApp execution, go to: " +
         node.platform,
       type: node.type,
-    },
-  ];
+    };
 
   return {
     webAppSetup,
@@ -152,19 +138,19 @@ function notImplementedNodeExecution(node: PolyglotNode) {
 }
 
 export function webAppExecution(node: PolyglotNode, ctx: string) {
-  if (node.platform == "Eraser") {
+  if (node.platform == "Eraser" || node.platform == "PapyrusWeb") {
     const challengeSetup: ChallengeSetup[] = [];
 
     const challengeContent: ChallengeContent[] = [
       {
         type: "markdown",
         content:
-          "You can do this activity in Eraser, please go in our workadventure world to complete it.",
+          "You can do this activity in WorkAdventure, please go in our world to complete it.",
       },
     ];
     const webAppSpecifics: webAppSpecifics = {
       webAppSetup: [],
-      webAppContent: [{ content: node.data, type: "Collaborative" }],
+      webAppContent: { content: node.data, type: "Collaborative" },
     };
     return {
       ...node,
@@ -189,7 +175,7 @@ export function webAppExecution(node: PolyglotNode, ctx: string) {
         " !",
     },
   ];
-  let webAppSpecifics: webAppSpecifics = { webAppSetup: [], webAppContent: [] };
+  let webAppSpecifics: webAppSpecifics = { webAppSetup: [], webAppContent: {content: ''} };
   if (node?.type == "multipleChoiceQuestionNode")
     webAppSpecifics = multipleChoiceQuestionNodeExecution(node);
   if (node?.type == "lessonTextNode")

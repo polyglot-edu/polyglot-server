@@ -266,11 +266,22 @@ export const CollaborativeModelingNodeSchema = new mongoose.Schema(
 
 export const UMLModelingNodeSchema = new mongoose.Schema(
   {
-    data:{
+    data: {
       assignment: { type: String },
+      title: { type: String },
       idUML: { type: String },
       projectUML: { type: String },
-      typeExercise: { type: String },    
+      mode: { type: String },
+      tags: [
+        {
+          type: {
+            name: { type: String },
+            color: { type: String },
+            _id: { type: String },
+          },
+          default: [],
+        },
+      ],
     },
   },
   options,
