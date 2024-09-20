@@ -47,7 +47,7 @@ service:
 
 ingress:
   enabled: true
-  className: "traefik"
+  className: "nginx"
 
 resources:
   {}
