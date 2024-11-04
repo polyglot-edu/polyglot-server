@@ -1,8 +1,9 @@
 import mongoose, { model, Model } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import validator from "validator";
+import { PolyglotFileInfo } from "../types/PolyglotFile";
 
-const fileSchema = new mongoose.Schema({
+const fileSchema = new mongoose.Schema<PolyglotFileInfo>({
   _id: {
     type: String,
     required: true,
@@ -23,4 +24,6 @@ const fileSchema = new mongoose.Schema({
 
 const FileMaterial = mongoose.model("File", fileSchema);
 
-export default FileMaterial;
+export interface PolyglotFileModel extends Model<PolyglotFileInfo> {}
+
+export default model<PolyglotFileInfo, PolyglotFileModel>("File", fileSchema);
