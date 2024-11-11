@@ -58,7 +58,7 @@ export const uploadFile = [
   async (req: RequestWithFile, res: Response) => {
     // Usa RequestWithFile qui
     const nodeId = req.params.id; // ID del nodo passato come parametro
-
+    const name = req.body.name;
     try {
       // Controlla se il file è stato caricato
       if (!req.file) {
@@ -73,6 +73,7 @@ export const uploadFile = [
           filename: req.file.filename,
           path: req.file.path,
           uploadedAt: new Date(),
+          name: name
         },
         { upsert: true, new: true },
       );
@@ -92,11 +93,12 @@ export const download = async (req: Request, res: Response) => {
   try {
     // Trova il file associato al nodo
     const file = await PolyglotFileModel.findById(nodeId);
-
+    
     if (!file) {
       return res.status(404).json({ message: "File non trovato" });
     }
 
+    res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
     res.download(file.path, file.filename);
   } catch (error) {
     console.error(error); // Log dell'errore per debugging
