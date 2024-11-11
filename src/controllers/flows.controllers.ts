@@ -43,7 +43,7 @@ export async function serverCleanUp(
   try {
     if (req.params.password != "polyglotClean") throw "Wrong password";
 
-    const resp = await await PolyglotFlowModel.deleteMany({ nodes: [] });
+    const resp = await PolyglotFlowModel.deleteMany({ nodes: [] });
     console.log(resp);
     res.status(204).json();
   } catch (error) {
