@@ -5,6 +5,15 @@ import {
   sendClassicPrompt,
 } from "../execution/prompts";
 import { genGraphChatGpt } from "../execution/generators";
+import {
+  AIExerciseType,
+  AnalyseType,
+  LOType,
+  MaterialType,
+  SummarizeType,
+} from "../types/AIGenerativeTypes";
+import { AxiosResponse } from "axios";
+import { API } from "../api/api";
 
 export async function genResource(
   req: Request<any, any, GenResProps>,
@@ -50,4 +59,23 @@ export async function genConceptMap(
     console.error(error);
     return res.status(500).json({ error: error });
   }
+}
+export async function analyseMaterial(
+  body: AnalyseType,
+): Promise<AxiosResponse> {
+  return API.analyseMaterial(body);
+}
+
+export async function generateLO(body: LOType): Promise<AxiosResponse> {
+  return API.generateLO(body);
+}
+
+export async function generateMaterial(
+  body: MaterialType,
+): Promise<AxiosResponse> {
+  return API.generateMaterial(body);
+}
+
+export async function summarize(body: SummarizeType): Promise<AxiosResponse> {
+  return API.summarize(body);
 }

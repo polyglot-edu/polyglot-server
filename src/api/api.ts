@@ -1,4 +1,11 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import {
+  AIExerciseType,
+  AnalyseType,
+  LOType,
+  MaterialType,
+  SummarizeType,
+} from "../types/AIGenerativeTypes";
 
 export type aiAPIResponse = {
   Date: string;
@@ -6,45 +13,52 @@ export type aiAPIResponse = {
   CorrectAnswer: string;
 };
 
-enum TypeOfExercise {
-  fill_in_the_blanks,
-  question,
-  choice,
-  conceptual,
-  practical,
-}
-
-type AIExerciseType = {
-  macroSubject: string;
-  title: string;
-  level: number; //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-  typeOfActivity: TypeOfExercise; //0=fill_in_the_blanks, 1=question, 2=choice, 3=conceptual, 4=practical
-  learningObjective: string;
-  bloomLevel: number; //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
-  language: string;
-  material: string;
-  correctAnswersNumber: number;
-  distractorsNumber: number;
-  easilyDiscardableDistractorsNumber: number;
-  assignmentType: number; //0=theoretical, 1=code, 2=problem_resolution,
-  topic: string;
-  temperature: number;
-};
-
 const AIAPIGeneration = axiosCreate.create({
   baseURL: "https://skapi.polyglot-edu.com",
   headers: {
     "Content-Type": "application/json",
+    withCredentials: true,
+    Access: "*",
     ApiKey: process.env.APIKEY,
     SetupModel:
-      '{"secretKey": "72ad445a32ad4b899c9a90cb496aae20","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
+      '{"secretKey": "' +
+      process.env.SETUPMODEL +
+      '","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
 export const API = {
+  analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/MaterialAnalyser/analyseMaterial`,
+      body,
+    );
+  },
+
+  generateLO: (body: LOType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/LearningObjectiveGenerator/generateLearningObjective`,
+      body,
+    );
+  },
+
+  generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/MaterialGenerator/generatematerial`,
+      body,
+    );
+  },
+
+  summarize: (body: SummarizeType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Summarizer/summarize`,
+      body,
+    );
+  },
+
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Exercises/GenerateExercise`,
+      `/ActivityGenerator/generateActivity`,
       body,
     );
   },
