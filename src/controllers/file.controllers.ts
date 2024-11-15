@@ -77,7 +77,7 @@ export const uploadFile = [
         },
         { upsert: true, new: true },
       );
-
+      console.log(updatedFile);
       res.json({ message: "File caricato con successo", file: updatedFile });
     } catch (error) {
       console.error(error); // Log dell'errore per debugging
@@ -95,14 +95,15 @@ export const download = async (req: Request, res: Response) => {
     const file = await PolyglotFileModel.findById(nodeId);
     
     if (!file) {
-      return res.status(404).json({ message: "File non trovato" });
+      return res.status(304).json({ message: "File not found" });
     }
-
-    res.setHeader("Content-Disposition", `attachment; filename=${file.filename}`);
+    
+    res.header("Access-Control-Expose-Headers", "Content-Disposition");
+    res.setHeader("Content-Disposition", `attachment; filename="${file.filename}"`);
     res.download(file.path, file.filename);
   } catch (error) {
     console.error(error); // Log dell'errore per debugging
-    res.status(500).json({ message: "Errore durante il download del file" });
+    res.status(500).json({ message: "Error during download" });
   }
 };
 
