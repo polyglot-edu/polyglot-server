@@ -73,7 +73,7 @@ export const uploadFile = [
           filename: req.file.filename,
           path: req.file.path,
           uploadedAt: new Date(),
-          name: name
+          name: name,
         },
         { upsert: true, new: true },
       );
@@ -93,13 +93,16 @@ export const download = async (req: Request, res: Response) => {
   try {
     // Trova il file associato al nodo
     const file = await PolyglotFileModel.findById(nodeId);
-    
+
     if (!file) {
       return res.status(304).json({ message: "File not found" });
     }
-    
+
     res.header("Access-Control-Expose-Headers", "Content-Disposition");
-    res.setHeader("Content-Disposition", `attachment; filename="${file.filename}"`);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${file.filename}"`,
+    );
     res.download(file.path, file.filename);
   } catch (error) {
     console.error(error); // Log dell'errore per debugging
