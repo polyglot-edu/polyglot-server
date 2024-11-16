@@ -6,10 +6,11 @@ const router = express.Router();
 router.post("/genRes", OpenAiControllers.genResource);
 router.post("/genGraph", OpenAiControllers.genConceptMap);
 //generativeAPI
-router.post("/MaterialAnalyser", OpenAiControllers.genResource);
-router.post("/LearningObjectiveGenerator", OpenAiControllers.genResource);
-router.post("/MaterialGenerator", OpenAiControllers.genResource);
-router.post("/Summarizer", OpenAiControllers.genResource);
-router.post("/ActivityGenerator", OpenAiControllers.genResource);
+router.post("/MaterialAnalyser", OpenAiControllers.analyseMaterial);
+router.post("/LearningObjectiveGenerator", OpenAiControllers.generateLO);
+router.post("/MaterialGenerator", OpenAiControllers.generateMaterial);
+router.post("/Summarizer", OpenAiControllers.summarize);
+router.post("/ActivityGenerator", OpenAiControllers.activityGenerator);
+router.post("/Corrector", OpenAiControllers.corrector);
 
 export default router;

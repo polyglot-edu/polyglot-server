@@ -1,7 +1,8 @@
-import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import axiosCreate, { AxiosResponse } from "axios";
 import {
   AIExerciseType,
   AnalyseType,
+  CorrectorType,
   LOType,
   MaterialType,
   SummarizeType,
@@ -19,11 +20,9 @@ const AIAPIGeneration = axiosCreate.create({
     "Content-Type": "application/json",
     withCredentials: true,
     Access: "*",
-    ApiKey: process.env.APIKEY,
+    ApiKey: "Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0",
     SetupModel:
-      '{"secretKey": "' +
-      process.env.SETUPMODEL +
-      '","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
+      '{"secretKey": "9d0c99f57dc748488db3d39bf4a0a1c9","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
@@ -59,6 +58,13 @@ export const API = {
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/ActivityGenerator/generateActivity`,
+      body,
+    );
+  },
+
+  corrector: (body: CorrectorType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Corrector/evaluate`,
       body,
     );
   },

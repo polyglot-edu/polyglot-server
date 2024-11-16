@@ -44,4 +44,11 @@ export type AIExerciseType = {
   temperature: number;
 };
 
+export type CorrectorType = {
+  question: string;
+  expectedAnswer: string;
+  answer: string;
+  temperature: number;
+};
+
 export type SummarizerBody = { lesson: string; noW: string; level: string };
