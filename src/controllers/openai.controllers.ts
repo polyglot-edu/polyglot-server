@@ -63,40 +63,34 @@ export async function genConceptMap(
 }
 
 export async function analyseMaterial(
-  req: Request<any, any, {body: AnalyseType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
-  console.log("starting AnalyseMaterial");
   try {
-  const response = await API.analyseMaterial(body);
-  console.log(response);
+  const response = await API.analyseMaterial(req.body);
   return res.status(200).json(response.data);
   } catch (error: any) {
-    console.error(error);
+    console.error("error");
     return res.status(500).json({ error: error });
   }
 }
 
 export async function generateLO(
-  req: Request<any, any, {body: LOType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
   try {
-  const response = await API.generateLO(body);
-  console.log(response);
+  const response = await API.generateLO(req.body);
   return res.status(200).json(response.data);
   } catch (error: any) {
-    console.error(error);
+    console.error("error");
     return res.status(500).json({ error: error });
   }
 }
 
 export async function generateMaterial(
-  req: Request<any, any, {body: MaterialType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
   try {
-  const response = await API.generateMaterial(body);
+  const response = await API.generateMaterial(req.body);
   console.log(response);
   return res.status(200).json(response.data);
   } catch (error: any) {
@@ -106,11 +100,10 @@ export async function generateMaterial(
 }
 
 export async function summarize(
-  req: Request<any, any, {body: SummarizeType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
   try {
-  const response = await API.summarize(body);
+  const response = await API.summarize(req.body);
   console.log(response);
   return res.status(200).json(response.data);
   } catch (error: any) {
@@ -120,11 +113,10 @@ export async function summarize(
 }
 
 export async function activityGenerator(
-  req: Request<any, any, {body: AIExerciseType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
   try {
-  const response = await API.generateNewExercise(body);
+  const response = await API.generateNewExercise(req.body);
   console.log(response);
   return res.status(200).json(response.data);
   } catch (error: any) {
@@ -134,11 +126,10 @@ export async function activityGenerator(
 }
 
 export async function corrector(
-  req: Request<any, any, {body: CorrectorType}>,
+  req: Request<any, any>,
   res: Response,) {
-  const { body } = req.body;
   try {
-  const response = await API.corrector(body);
+  const response = await API.corrector(req.body);
   console.log(response);
   return res.status(200).json(response.data);
   } catch (error: any) {
