@@ -20,9 +20,11 @@ const AIAPIGeneration = axiosCreate.create({
     "Content-Type": "application/json",
     withCredentials: true,
     Access: "*",
-    ApiKey: "Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0",
+    ApiKey: process.env.APIKEY,
     SetupModel:
-      '{"secretKey": "9d0c99f57dc748488db3d39bf4a0a1c9","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
+      '{"secretKey": "' +
+      process.env.SECRETKEY +
+      '","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
