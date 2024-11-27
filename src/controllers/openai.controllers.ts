@@ -85,7 +85,6 @@ export async function generateLO(req: Request<any, any>, res: Response) {
 export async function generateMaterial(req: Request<any, any>, res: Response) {
   try {
     const response = await API.generateMaterial(req.body);
-    console.log(response);
     return res.status(200).json(response.data);
   } catch (error: any) {
     console.error(error);
@@ -96,7 +95,6 @@ export async function generateMaterial(req: Request<any, any>, res: Response) {
 export async function summarize(req: Request<any, any>, res: Response) {
   try {
     const response = await API.summarize(req.body);
-    console.log(response);
     return res.status(200).json(response.data);
   } catch (error: any) {
     console.error(error);
@@ -107,7 +105,6 @@ export async function summarize(req: Request<any, any>, res: Response) {
 export async function activityGenerator(req: Request<any, any>, res: Response) {
   try {
     const response = await API.generateNewExercise(req.body);
-    console.log(response);
     return res.status(200).json(response.data);
   } catch (error: any) {
     console.error(error);
@@ -118,7 +115,6 @@ export async function activityGenerator(req: Request<any, any>, res: Response) {
 export async function corrector(req: Request<any, any>, res: Response) {
   try {
     const response = await API.corrector(req.body);
-    console.log(response);
     return res.status(200).json(response.data);
   } catch (error: any) {
     console.error(error);
