@@ -18,26 +18,26 @@ router
 
 router
   .route("/:id/type")
-  .get(checkAuth, LearningDataController.getActionByType);
+//  .get(checkAuth, LearningDataController.getActionByType);
 
 router
   .route("/:password/serverClean") //API to clean the server from empty flows
-  .get(LearningDataController.serverCleanUp);
+//  .get(LearningDataController.serverCleanUp);
 
 router
   .route("/:id/runFirst") //first version of the notebook (run the execution from the first call)
-  .get(LearningDataController.downloadNotebookVSC);
+//  .get(LearningDataController.downloadNotebookVSC);
 
 router
   .route("/:ctxId/run/:filename") // version of notebook with only ctx information
-  .get(LearningDataController.downloadNotebookVSCCTX);
+//  .get(LearningDataController.downloadNotebookVSCCTX);
 
 router
   .route("/:id/:ctxId/run/:filename") //2nd version of notebook with ctx information and flowId
-  .get(LearningDataController.downloadNotebookVSC2);
+//  .get(LearningDataController.downloadNotebookVSC2);
 
 router
   .route("/:id/publish") //function to publish the flow
-  .put(checkAuth, LearningDataController.publishFlow);
+//  .put(checkAuth, LearningDataController.publishFlow);
 
 export default router;
