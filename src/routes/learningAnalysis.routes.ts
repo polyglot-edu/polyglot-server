@@ -4,7 +4,7 @@ import * as LearningDataController from "../controllers/learningAnalysis.control
 
 const router = express.Router();
 
-/* DA FIXARE
+// DA FIXARE
 
 router.route("/").post(checkAuth, LearningDataController.createAction);
 
@@ -40,4 +40,4 @@ router
   .route("/:id/publish") //function to publish the flow
   .put(checkAuth, LearningDataController.publishFlow);
 
-export default router; */
+export default router;

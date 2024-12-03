@@ -6,9 +6,7 @@ import * as Types from "../types/LearningData";
 const options = { discriminatorKey: "type" };
 
 //Interfacce per Mongoose
-export interface BaseActionDocument 
-  extends Types.BaseAction,
-    Document {}
+export interface BaseActionDocument extends Types.BaseAction, Document {}
 export interface OpenToolActionDocument
   extends Types.OpenToolAction,
     Document {}
@@ -24,9 +22,7 @@ export interface CloseLPSelectionActionDocument
 export interface SearchForLPActionDocument
   extends Types.SearchForLPAction,
     Document {}
-export interface ShowLPActionDocument
-  extends Types.ShowLPAction,
-    Document {}
+export interface ShowLPActionDocument extends Types.ShowLPAction, Document {}
 export interface SelectLPActionDocument
   extends Types.SelectLPAction,
     Document {}
@@ -38,7 +34,7 @@ export interface LogInToPolyGloTActionDocument
     Document {}
 export interface LogOutToPolyGloTActionDocument
   extends Types.LogOutToPolyGloTAction,
-      Document {}
+    Document {}
 export interface CreateLPActionDocument
   extends Types.CreateLPAction,
     Document {}
@@ -68,7 +64,7 @@ export const baseActionSchema = new Schema(
     userId: { type: String, required: true },
     zoneId: { type: Types.ZoneId, required: true },
     type: { type: String, required: true },
-    platform: { type: Types.Platform, required: true},
+    platform: { type: Types.Platform, required: true },
   },
   options,
 );
@@ -291,13 +287,13 @@ export const OpenLPSelectionActionModel =
   BaseActionModel.discriminator<OpenLPSelectionActionDocument>(
     "OpenLPSelectionAction",
     openLPSelectionActionSchema,
-  )
+  );
 
 export const CloseLPSelectionActionModel =
   BaseActionModel.discriminator<CloseLPSelectionActionDocument>(
     "CloseLPSelectionAction",
     closeLPSelectionActionSchema,
-  )
+  );
 
 export const SearchForLPActionModel =
   BaseActionModel.discriminator<SearchForLPActionDocument>(

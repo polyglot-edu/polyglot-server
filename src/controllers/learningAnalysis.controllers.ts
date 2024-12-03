@@ -3,7 +3,7 @@ import * as Models from "../models/learningData.models"; //va bene?
 //import { BaseAction, OpenLearningPageAction, CloseLearningPageAction, ChangeTabAction, ChangePageAction } from "../types/LearningData";
 import * as Types from "../types/LearningData";
 
-/* DA FIXARE CON NUOVI TIPI E MODELLI
+// DA FIXARE CON NUOVI TIPI E MODELLI
 
 // Funzione per creazione di azione nel database
 export const createAction = async (req: Request, res: Response) => {
@@ -15,11 +15,9 @@ export const createAction = async (req: Request, res: Response) => {
 
     if (!req.body.timestamp || !req.body.userId || !req.body.zoneId) {
       // Controlla che campi siano presenti
-      return res
-        .status(400)
-        .json({
-          error: "Missing required fields: timestamp, userId, or zoneId.",
-        });
+      return res.status(400).json({
+        error: "Missing required fields: timestamp, userId, or zoneId.",
+      });
     }
 
     let action: any;
@@ -29,33 +27,29 @@ export const createAction = async (req: Request, res: Response) => {
       type //case per ogni tipo di azione? Non c'è modo migliore??
     ) {
       case "open_learning_page":
-        const openAction = req.body as Types.OpenLearningPageAction;
+        const openAction = req.body; // as OpenLearningPageAction;
         if (!openAction.action.lpId || !openAction.action.pageId) {
-          return res
-            .status(400)
-            .json({
-              error: "Missing fields for open_learning_page: lpId or pageId.",
-            });
+          return res.status(400).json({
+            error: "Missing fields for open_learning_page: lpId or pageId.",
+          });
         }
-        action = await Models.OpenPageActionModel.create(openAction);
+        action = await Models.OpenNodeActionModel.create(openAction); //to be checked
         res
           .status(200)
           .json({ message: "Action created successfully", data: action });
         break;
 
       case "close_learning_page":
-        const closeAction = actionData as Types.CloseLearningPageAction;
+        const closeAction = action; // as CloseLearningPageAction;
         if (!closeAction.action.lpId || !closeAction.action.pageId) {
-          return res
-            .status(400)
-            .json({
-              error: "Missing fields for close_learning_page: lpId or pageId.",
-            });
+          return res.status(400).json({
+            error: "Missing fields for close_learning_page: lpId or pageId.",
+          });
         }
         break;
 
       case "changed_tab":
-        const tabAction = actionData as Types.ChangeTabAction;
+        const tabAction = action; //as ChangeTabAction;
         if (!tabAction.action.lpId || !tabAction.action.pageId) {
           return res
             .status(400)
@@ -64,13 +58,11 @@ export const createAction = async (req: Request, res: Response) => {
         break;
 
       case "changed_page":
-        const pageAction = actionData as Types.ChangePageAction;
+        const pageAction = action; // as ChangePageAction;
         if (!pageAction.action.oldPageId || !pageAction.action.newPageId) {
-          return res
-            .status(400)
-            .json({
-              error: "Missing fields for changed_page: oldPageId or newPageId.",
-            });
+          return res.status(400).json({
+            error: "Missing fields for changed_page: oldPageId or newPageId.",
+          });
         }
         break;
 
@@ -136,7 +128,7 @@ export async function getActionByUser(req: Request, res: Response) {
 
 //Calcola tempo trascorso tra apertura e avanzamento a pagina successiva
 
-/*
+/*TO BE IMPLEMENTED
 // Calcola tempo trascorso in caso di open-close, open-changeTab e open-nextPage chiamando rispettive funzioni 
 export const calculateTimeSpent = async (req: Request, res: Response) => {
     try {
@@ -158,16 +150,17 @@ export const calculateTimeSpent = async (req: Request, res: Response) => {
         }
   
         // Divide azioni per tipo
-        const openActions = actions.filter(a => a.action.type === "open_learning_page");
-        const closeActions = actions.filter(a => a.action.type === "close_learning_page");
-        const tabChanges = actions.filter(a => a.action.type === "changed_tab");
-        const pageChanges = actions.filter(a => a.action.type === "changed_page");
+        const openActions = actions.filter(a => a.type === "open_learning_page");
+        const closeActions = actions.filter(a => a.type === "close_learning_page");
+        const tabChanges = actions.filter(a => a.type === "changed_tab");
+        const pageChanges = actions.filter(a => a.type === "changed_page");
   
         // Analizza i tre casi
+       
         const timeSpentOnPage = analyzeOpenClose(openActions, closeActions);
         const timeSpentDuringTabChanges = analyzeTabChanges(openActions, tabChanges);
         const timeSpentDuringPageChanges = analyzePageChanges(openActions, pageChanges);
-  
+        
         res.status(200).json({
             timeSpentOnPage,
             timeSpentDuringTabChanges,
@@ -176,4 +169,4 @@ export const calculateTimeSpent = async (req: Request, res: Response) => {
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }
-}; */ 
+};*/
