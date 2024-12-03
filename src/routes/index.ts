@@ -7,6 +7,7 @@ import searchRouter from "./search.routes";
 import metadataRouter from "./metadata.routes";
 import openaiRouter from "./openai.routes";
 import conceptRouter from "./concept.routes";
+import learningRouter from "./learningAnalysis.routes";
 import cors from "cors";
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.use("/api/search", searchRouter);
 router.use("/api/metadata", metadataRouter);
 router.use("/api/openai", openaiRouter);
 router.use("/api/concept", conceptRouter);
+router.use("/api/learningAnalytics", learningRouter);
 
 export default router;

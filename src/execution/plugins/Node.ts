@@ -40,7 +40,7 @@ export type CloseEndedQuestionNodeData = {
 
 export type CollaborativeModelingnNodeData = {
   assignment: string;
-  scheme: string;  
+  scheme: string;
 };
 
 export type UMLModelingnNodeData = {

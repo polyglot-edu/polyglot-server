@@ -125,11 +125,11 @@ function summaryNodeExecution(node: PolyglotNode) {
 function notImplementedNodeExecution(node: PolyglotNode) {
   const webAppSetup: WebAppSetup[] = [];
   const webAppContent: WebAppContent = {
-      content:
-        "This node type is not implemented for WebApp execution, go to: " +
-        node.platform,
-      type: node.type,
-    };
+    content:
+      "This node type is not implemented for WebApp execution, go to: " +
+      node.platform,
+    type: node.type,
+  };
 
   return {
     webAppSetup,
@@ -175,7 +175,10 @@ export function webAppExecution(node: PolyglotNode, ctx: string) {
         " !",
     },
   ];
-  let webAppSpecifics: webAppSpecifics = { webAppSetup: [], webAppContent: {content: ''} };
+  let webAppSpecifics: webAppSpecifics = {
+    webAppSetup: [],
+    webAppContent: { content: "" },
+  };
   if (node?.type == "multipleChoiceQuestionNode")
     webAppSpecifics = multipleChoiceQuestionNodeExecution(node);
   if (node?.type == "lessonTextNode")
