@@ -6,19 +6,36 @@ const router = express.Router();
 
 // DA FIXARE
 
-router.route("/").post(checkAuth, LearningDataController.createAction);
+router
+  .route("/")
+  .post(checkAuth, LearningDataController.createAction);
 
+/* IN SOSPESO
 router
   .route("/filterActions")
   .get(checkAuth, LearningDataController.getActionsByFilter);
-
+*/
 router
   .route("/:id/user")
-  .get(checkAuth, LearningDataController.getActionByUser);
+  .get(checkAuth, LearningDataController.getActionByUserId);
 
 router
   .route("/:id/type")
-//  .get(checkAuth, LearningDataController.getActionByType);
+  .get(checkAuth, LearningDataController.getActionByType);
+
+router
+  .route("/:id/zoneId")
+  .get(checkAuth, LearningDataController.getActionByZoneId);
+
+router
+  .route("/:id/platform")
+  .get(checkAuth, LearningDataController.getActionByPlatform);
+
+router
+  .route("/:id/flowId")
+  .get(checkAuth, LearningDataController.getActionByFlowId);
+
+
 
 router
   .route("/:password/serverClean") //API to clean the server from empty flows

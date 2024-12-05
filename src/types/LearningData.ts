@@ -28,27 +28,33 @@ export enum Platform {
   WebApp,
 }
 
+export enum UserRole {
+  Teacher,
+  Student,
+  Tutor,
+}
+
 // Tipo base di tutte le azioni
 export type BaseAction = {
   timestamp: Date;
   userId: string;
   zoneId: ZoneId;
   type: String;
-  platform: Platform;
+  platform: Platform; //meglio modificare in "tool"?
 };
 
 // Azione di apertura di un tool
 export type OpenToolAction = BaseAction & {
   action: {
-    pageId: string;
-    //flowId: string; ?
+    flowId: string;
+    nodeId: string;
   };
 };
 
 export type CloseToolAction = BaseAction & {
   action: {
-    pageId: string;
-    //flowId: string; ?
+    flowId: string;
+    nodeId: string;
   };
 };
 
@@ -78,7 +84,7 @@ export type SearchForLPAction = BaseAction & {
 export type ShowLPAction = BaseAction & {
   action: {
     queryId: string;
-    resultIds: string[];
+    resultId: string[];
   };
 };
 
@@ -100,13 +106,13 @@ export type RemoveLPSelectionAction = BaseAction & {
 // Azioni di LogIn e LogOut to PoliGloT
 export type LogInToPolyGloTAction = BaseAction & {
   action: {
-    userRole: string; //enum?
+    userRole: UserRole;
   };
 };
 
 export type LogOutToPolyGloTAction = BaseAction & {
   action: {
-    userRole: string; //enum?
+    userRole: UserRole;
   };
 };
 

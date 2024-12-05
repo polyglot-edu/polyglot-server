@@ -1,11 +1,8 @@
 import { Request, Response } from "express";
-import * as Models from "../models/learningData.models"; //va bene?
-//import { BaseAction, OpenLearningPageAction, CloseLearningPageAction, ChangeTabAction, ChangePageAction } from "../types/LearningData";
+import * as Models from "../models/learningData.models";
 import * as Types from "../types/LearningData";
 
-// DA FIXARE CON NUOVI TIPI E MODELLI
-
-// Funzione per creazione di azione nel database
+// Function to create and save an action in the database
 export const createAction = async (req: Request, res: Response) => {
   try {
     const type = req.body.type;
@@ -13,57 +10,183 @@ export const createAction = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Action type is required." });
     }
 
-    if (!req.body.timestamp || !req.body.userId || !req.body.zoneId) {
-      // Controlla che campi siano presenti
+    if (!req.body.timestamp || !req.body.userId || !req.body.zoneId || !req.body.platform) { // Controlla che campi siano presenti
       return res.status(400).json({
-        error: "Missing required fields: timestamp, userId, or zoneId.",
+        error: "Missing required fields: timestamp, userId, zoneId or platform.",
       });
     }
 
-    let action: any;
+    let action: any; //Problema lasciare any?
 
-    // Specifiche per i tipi di azioni (puoi espandere con più validazioni per ogni tipo)
-    switch (
-      type //case per ogni tipo di azione? Non c'è modo migliore??
-    ) {
-      case "open_learning_page":
-        const openAction = req.body; // as OpenLearningPageAction;
-        if (!openAction.action.lpId || !openAction.action.pageId) {
+    switch (type) {
+      case "open_tool":
+        const openToolAction = req.body;
+        if (!openToolAction.action.flowId || !openToolAction.action.nodeId) {
           return res.status(400).json({
-            error: "Missing fields for open_learning_page: lpId or pageId.",
+            error: "Missing fields for open_tool: flowId or nodeId.",
           });
         }
-        action = await Models.OpenNodeActionModel.create(openAction); //to be checked
-        res
-          .status(200)
-          .json({ message: "Action created successfully", data: action });
+        action = await Models.OpenToolActionModel.create(openToolAction);
         break;
 
-      case "close_learning_page":
-        const closeAction = action; // as CloseLearningPageAction;
-        if (!closeAction.action.lpId || !closeAction.action.pageId) {
+      case "close_tool":
+        const closeToolAction = req.body;
+        if (!closeToolAction.action.flowId || !closeToolAction.action.nodeId) {
           return res.status(400).json({
-            error: "Missing fields for close_learning_page: lpId or pageId.",
+            error: "Missing fields for close_tool: flowId or nodeId.",
           });
         }
+        action = await Models.CloseToolActionModel.create(closeToolAction);
         break;
 
-      case "changed_tab":
-        const tabAction = action; //as ChangeTabAction;
-        if (!tabAction.action.lpId || !tabAction.action.pageId) {
-          return res
-            .status(400)
-            .json({ error: "Missing fields for changed_tab: lpId or pageId." });
-        }
-        break;
-
-      case "changed_page":
-        const pageAction = action; // as ChangePageAction;
-        if (!pageAction.action.oldPageId || !pageAction.action.newPageId) {
+      case "open_LP_selection":
+        const openLPSelection = req.body;
+        if (!openLPSelection.action.flowId) {
           return res.status(400).json({
-            error: "Missing fields for changed_page: oldPageId or newPageId.",
+            error: "Missing fields for open_LP_selection: flowId.",
           });
         }
+        action = await Models.OpenLPSelectionActionModel.create(openLPSelection);
+        break;
+
+      case "close_LP_selection":
+        const closeLPSelection = req.body;
+        if (!closeLPSelection.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for close_LP_selection: flowId.",
+          });
+        }
+        action = await Models.CloseLPSelectionActionModel.create(closeLPSelection);
+        break;
+
+      case "search_for_LP":
+        const SearchForLP = req.body;
+        if (!SearchForLP.action.queryId || !SearchForLP.action.queryText) {
+          return res.status(400).json({
+            error: "Missing fields for search_for_LP: queryId or queryText.",
+          });
+        }
+        action = await Models.SearchForLPActionModel.create(SearchForLP);
+        break;
+
+      case "show_LP":
+        const ShowLP = req.body;
+        if (!ShowLP.action.queryId || !ShowLP.action.resultId) {
+          return res.status(400).json({
+            error: "Missing fields for show_LP: queryId or resultId.",
+          });
+        }
+        action = await Models.ShowLPActionModel.create(ShowLP);
+        break;
+
+      case "select_LP":
+        const SelectLP = req.body;
+        if (!SelectLP.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for select_LP: flowId.",
+          });
+        }
+        action = await Models.SelectLPActionModel.create(SelectLP);
+        break;
+
+      case "remove_LP_selection":
+        const RemoveLPSelection = req.body;
+        if (!RemoveLPSelection.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for remove_LP_selection: flowId.",
+          });
+        }
+        action = await Models.RemoveLPSelectionActionModel.create(RemoveLPSelection);
+        break;
+
+      case "log_in_to_PolyGloT":
+        const LogInToPolyGloT = req.body;
+        if (!LogInToPolyGloT.action.userRole) {
+          return res.status(400).json({
+            error: "Missing fields for log_in_to_PolyGloT: userRole.",
+          });
+        }
+        action = await Models.LogInToPolyGloTActionModel.create(LogInToPolyGloT);
+        break;
+
+      case "log_out_to_PolyGloT":
+        const LogOutToPolyGloT = req.body;
+        if (!LogOutToPolyGloT.action.userRole) {
+          return res.status(400).json({
+            error: "Missing fields for log_out_to_PolyGloT: userRole.",
+          });
+        }
+        action = await Models.LogOutToPolyGloTActionModel.create(LogOutToPolyGloT);
+        break;
+
+      case "create_LP":
+        const CreateLP = req.body;
+        if (!CreateLP.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for create_LP: flowId.",
+          });
+        }
+        action = await Models.CreateLPActionModel.create(CreateLP);
+        break;
+
+      case "modify_LP":
+        const ModifyLP = req.body;
+        if (!ModifyLP.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for modify_LP: flowId.",
+          });
+        }
+        action = await Models.ModifyLPActionModel.create(ModifyLP);
+        break;
+
+      case "delete_LP":
+        const DeleteLP = req.body;
+        if (!DeleteLP.action.flowId) {
+          return res.status(400).json({
+            error: "Missing fields for delete_LP: flowId.",
+          });
+        }
+        action = await Models.DeleteLPActionModel.create(DeleteLP);
+        break;
+
+      case "open_node":
+        const OpenNode = req.body;
+        if (!OpenNode.action.flowId || !OpenNode.action.nodeId) {
+          return res.status(400).json({
+            error: "Missing fields for open_node: flowId or nodeId.",
+          });
+        }
+        action = await Models.OpenNodeActionModel.create(OpenNode);
+        break;
+
+      case "close_node":
+        const CloseNode = req.body;
+        if (!CloseNode.action.flowId || !CloseNode.action.nodeId) {
+          return res.status(400).json({
+            error: "Missing fields for close_node: flowId or nodeId.",
+          });
+        }
+        action = await Models.CloseNodeActionModel.create(CloseNode);
+        break;
+
+      case "change_node":
+        const ChangeNode = req.body;
+        if (!ChangeNode.action.flowId || !ChangeNode.action.oldNodeId || !ChangeNode.action.newNodeId) {
+          return res.status(400).json({
+            error: "Missing fields for change_node: flowId, oldNodeId or newNodeId.",
+          });
+        }
+        action = await Models.ChangeNodeActionModel.create(ChangeNode);
+        break;
+
+      case "submit_answer":
+        const SubmitAnswer = req.body;
+        if (!SubmitAnswer.action.flowId || !SubmitAnswer.action.nodeId || !SubmitAnswer.action.exerciseType || !SubmitAnswer.action.answer || !SubmitAnswer.action.result) {
+          return res.status(400).json({
+            error: "Missing fields for submit_answer: flowId, nodeId, exerciseType, answer or result.",
+          });
+        }
+        action = await Models.SubmitAnswerActionModel.create(SubmitAnswer);
         break;
 
       default:
@@ -72,7 +195,7 @@ export const createAction = async (req: Request, res: Response) => {
           .json({ error: `Unsupported action type: ${action.type}` });
     }
 
-    // Rispondere con i dati salvati
+    // Ritorna i dati salvati
     res
       .status(200)
       .json({ message: "Action created successfully", data: action });
@@ -81,7 +204,146 @@ export const createAction = async (req: Request, res: Response) => {
   }
 };
 
+// GET functions
+export async function getActionByUserId(req: Request, res: Response) {
+  try {
+    const actions = await Models.BaseActionModel.find({ userId: req.params.id });
+    if (!actions) {
+      return res.status(404).send();
+    }
+    return res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
+  }
+}
+
+export async function getActionByType(req: Request, res: Response) {
+  try {
+    const actions = await Models.BaseActionModel.find({ type: req.params.id });
+    if (!actions) {
+      return res.status(404).send();
+    }
+    return res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
+  }
+}
+
+export async function getActionByZoneId(req: Request, res: Response) {
+  try {
+    const actions = await Models.BaseActionModel.find({ zoneId: req.params.id });
+    if (!actions) {
+      return res.status(404).send();
+    }
+    return res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
+  }
+}
+
+export async function getActionByPlatform(req: Request, res: Response) {
+  try {
+    const actions = await Models.BaseActionModel.find({ platform: req.params.id });
+    if (!actions) {
+      return res.status(404).send();
+    }
+    return res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
+  }
+}
+
+export async function getActionByFlowId(req: Request, res: Response) {
+  try {
+    const actions = await Models.BaseActionModel.find({ flowId: req.params.id });
+    if (!actions) {
+      return res.status(404).send();
+    }
+    return res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
+  }
+}
+
+// getActionByflowId&pageId?
+
+export const calculateTimeOnTool = async (req: Request, res: Response) => {
+  try {
+    const { userId, platform } = req.query;
+
+    // Verifica che userId e platform siano forniti
+    if (!userId || !platform) {
+      return res
+        .status(400)
+        .json({ error: "Missing required query parameters: userId or platform" });
+    }
+
+    // Recupera azioni rilevanti
+    const actions = await Models.BaseActionModel.find({
+      userId,
+      platform: platform,
+      type: { $in: ["open_tool", "close_tool"] },
+    }).sort({ timestamp: -1 }); // Ordina dal più recente al meno
+
+    if (!actions || actions.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No actions found for the given user and platform." });
+    }
+
+    // Distingui aperture e chiusure
+    const openActions = actions.filter(action => action.type === "open_tool");
+    const closeActions = actions.filter(action => action.type === "close_tool");
+
+    if (openActions.length === 0 || closeActions.length === 0) {
+      return res.status(400).json({
+        error: "Insufficient data: no open_tool or close_tool actions found.",
+      });
+    }
+
+    // Trova ultima chiusura
+    const lastClose = closeActions[0];
+
+    // Trova ultima apertura (prima della chiusura più recente)
+    const lastOpen = openActions.find(
+      action => action.timestamp < lastClose.timestamp
+    );
+
+    if (!lastOpen) {
+      return res.status(400).json({
+        error: "No valid open_tool action found before the last close_tool action.",
+      });
+    }
+
+    // DA FIXARE
+    // Calcola differenza di tempo in millisecondi   
+    //const timeSpentOnTool = new Date(lastClose.timestamp).getTime() - new Date(lastOpen.timestamp).getTime();
+    //const timeSpentOnToolseconds = timeSpentOnTool / 1000;
+
+    return res.status(200).json({
+      message: "Time spent on tool calculated successfully.",
+    //  timeSpentOnToolseconds,
+      openActionTimestamp: lastOpen.timestamp,
+      closeActionTimestamp: lastClose.timestamp,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 // Recupera tutte le azioni (filtro opzionale per userId, zoneId, type, lpId, exerciseType, exerciseId)
+/*  IN SOSPESO
 export const getActionsByFilter = async (req: Request, res: Response) => {
   try {
     const {
@@ -112,61 +374,8 @@ export const getActionsByFilter = async (req: Request, res: Response) => {
         .json({ error: "Error in returning actions (getAllActions)." });
     }
   }
-};
+};  */
 
-export async function getActionByUser(req: Request, res: Response) {
-  try {
-    const actions = await Models.BaseActionModel.find({ user: req.params.id });
-    if (!actions) {
-      return res.status(404).send();
-    }
-    return res.status(200).send(actions);
-  } catch (err: any) {
-    return res.status(500).send(err);
-  }
-}
 
-//Calcola tempo trascorso tra apertura e avanzamento a pagina successiva
+//Calcola tempo trascorso tra apertura nodo e avanzamento a pagina successiva
 
-/*TO BE IMPLEMENTED
-// Calcola tempo trascorso in caso di open-close, open-changeTab e open-nextPage chiamando rispettive funzioni 
-export const calculateTimeSpent = async (req: Request, res: Response) => {
-    try {
-        const { userId, lpId, pageId } = req.query;
-  
-        if (!userId || !lpId || !pageId) {
-            return res.status(400).json({ error: "userId, lpId, and pageId are required." });
-        }
-  
-        // Filtra azioni dell'utente sulla pagina specificata, ordinando per timestamp
-        const actions = await Models.BaseActionModel.find({
-            userId,
-            "action.lpId": lpId,
-            "action.pageId": pageId,
-       }).sort({ timestamp: 1 });
-  
-        if (!actions || actions.length === 0) {
-            return res.status(404).json({ error: "No action found for the given user and page." });
-        }
-  
-        // Divide azioni per tipo
-        const openActions = actions.filter(a => a.type === "open_learning_page");
-        const closeActions = actions.filter(a => a.type === "close_learning_page");
-        const tabChanges = actions.filter(a => a.type === "changed_tab");
-        const pageChanges = actions.filter(a => a.type === "changed_page");
-  
-        // Analizza i tre casi
-       
-        const timeSpentOnPage = analyzeOpenClose(openActions, closeActions);
-        const timeSpentDuringTabChanges = analyzeTabChanges(openActions, tabChanges);
-        const timeSpentDuringPageChanges = analyzePageChanges(openActions, pageChanges);
-        
-        res.status(200).json({
-            timeSpentOnPage,
-            timeSpentDuringTabChanges,
-            timeSpentDuringPageChanges,
-        });
-    } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
-    }
-};*/

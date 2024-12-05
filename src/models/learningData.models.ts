@@ -74,7 +74,8 @@ export const openToolActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      pageId: { type: String, required: true },
+      flowId: { type: String, required: true },
+      nodeId: { type: String, required: true },
     },
   },
   options,
@@ -84,7 +85,8 @@ export const closeToolActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      pageId: { type: String, required: true },
+      flowId: { type: String, required: true },
+      nodeId: { type: String, required: true },
     },
   },
   options,
@@ -126,7 +128,7 @@ export const showLPActionSchema = new Schema(
     ...baseActionSchema.obj,
     action: {
       queryId: { type: String, required: true }, //Da rivedere per l'id
-      resultIds: { type: [String], required: true },
+      resultId: { type: [String], required: true },
     },
   },
   options,
@@ -156,7 +158,7 @@ export const logInToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true }, //Da rivedere se viene cambiato in enum
+      userRole: { type: Types.UserRole, required: true },
     },
   },
   options,
@@ -166,7 +168,7 @@ export const logOutToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true }, //Da rivedere se viene cambiato in enum
+      userRole: { type: Types.UserRole, required: true },
     },
   },
   options,
