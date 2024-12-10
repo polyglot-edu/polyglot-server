@@ -292,8 +292,8 @@ export const calculateTimeOnTool = async (req: Request, res: Response) => {
     }
 
     // Distingui aperture e chiusure
-    const openActions = actions.filter(action => action.type === "open_tool");
-    const closeActions = actions.filter(action => action.type === "close_tool");
+    const openActions = actions.filter(action => action.actionType === "open_tool");
+    const closeActions = actions.filter(action => action.actionType === "close_tool");
 
     if (openActions.length === 0 || closeActions.length === 0) {
       return res.status(400).json({

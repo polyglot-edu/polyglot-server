@@ -62,9 +62,9 @@ export const baseActionSchema = new Schema(
   {
     timestamp: { type: Date, required: true },
     userId: { type: String, required: true },
-    zoneId: { type: Types.ZoneId, required: true },
-    type: { type: String, required: true },
-    platform: { type: Types.Platform, required: true },
+    zoneId: { type: String, required: true },
+    actionType: { type: String, required: true },
+    platform: { type: String, required: true },
   },
   options,
 );
@@ -158,7 +158,7 @@ export const logInToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: Types.UserRole, required: true },
+      userRole: { type: String, required: true },
     },
   },
   options,
@@ -168,7 +168,7 @@ export const logOutToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: Types.UserRole, required: true },
+      userRole: { type: String, required: true },
     },
   },
   options,
@@ -258,7 +258,7 @@ export const submitAnswerActionSchema = new Schema(
     action: {
       flowId: { type: String, required: true },
       nodeId: { type: String, required: true },
-      exerciseType: { type: Types.ExerciseType, required: true },
+      exerciseType: { type: String, required: true },
       answer: { type: [String], required: true },
       result: { type: Boolean, required: true },
     },

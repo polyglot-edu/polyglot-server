@@ -39,7 +39,7 @@ export type BaseAction = {
   timestamp: Date;
   userId: string;
   zoneId: ZoneId;
-  type: String;
+  actionType: String;
   platform: Platform; //meglio modificare in "tool"?
 };
 
