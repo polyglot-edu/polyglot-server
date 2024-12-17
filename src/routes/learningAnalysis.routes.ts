@@ -8,7 +8,8 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(checkAuth, LearningDataController.createAction);
+  .post(checkAuth, LearningDataController.createAction)
+  .get(checkAuth, LearningDataController.getAllAction);
 
 /* IN SOSPESO
 router
@@ -16,27 +17,50 @@ router
   .get(checkAuth, LearningDataController.getActionsByFilter);
 */
 router
-  .route("/:id/user")
+  .route("/userId/:id")
   .get(checkAuth, LearningDataController.getActionByUserId);
 
 router
-  .route("/:id/type")
-  .get(checkAuth, LearningDataController.getActionByType);
+  .route("/userIds/:ids")
+  .get(checkAuth, LearningDataController.getActionsByUserIds);
 
 router
-  .route("/:id/zoneId")
+  .route("/actionType/:id")
+  .get(checkAuth, LearningDataController.getActionByActionType);
+
+router
+  .route("/actionTypes/:ids")
+  .get(checkAuth, LearningDataController.getActionsByActionTypes);
+
+router
+  .route("/zoneId/:id")
   .get(checkAuth, LearningDataController.getActionByZoneId);
 
 router
-  .route("/:id/platform")
+  .route("/zoneIds/:ids")
+  .get(checkAuth, LearningDataController.getActionsByZoneIds);
+
+router
+  .route("/platform/:id")
   .get(checkAuth, LearningDataController.getActionByPlatform);
 
 router
-  .route("/:id/flowId")
+  .route("/platforms/:ids")
+  .get(checkAuth, LearningDataController.getActionsByPlatforms);
+
+router
+  .route("/flowId/:id")
   .get(checkAuth, LearningDataController.getActionByFlowId);
 
+router
+  .route("/flowIds/:ids")
+  .get(checkAuth, LearningDataController.getActionsByFlowIds);
 
+router
+  .route("/calcTimeOnTool")
+  .get(checkAuth, LearningDataController.calculateTimeOnTool);
 
+/*
 router
   .route("/:password/serverClean") //API to clean the server from empty flows
 //  .get(LearningDataController.serverCleanUp);
@@ -56,5 +80,5 @@ router
 router
   .route("/:id/publish") //function to publish the flow
 //  .put(checkAuth, LearningDataController.publishFlow);
-
+*/
 export default router;

@@ -22,10 +22,11 @@ export enum ExerciseType {
 }
 
 export enum Platform {
-  PolyGlot,
+  PolyGloT,
   VirtualStudio,
   Papyrus,
   WebApp,
+  WorkAdventure
 }
 
 export enum UserRole {
@@ -38,23 +39,81 @@ export enum UserRole {
 export type BaseAction = {
   timestamp: Date;
   userId: string;
-  zoneId: ZoneId;
   actionType: String;
+  zoneId: ZoneId;  
   platform: Platform; //meglio modificare in "tool"?
 };
 
-// Azione di apertura di un tool
+// Azione di registrazione a WorkAdventure
+export type RegistrationToWorkAdventureAction = BaseAction & {
+  action: {
+    userRole: UserRole;
+  };
+};
+
+// Azioni di LogIn e LogOut to WorkAdventure
+export type LogInToWorkAdventureAction = BaseAction & {
+  action: {
+    userRole: UserRole;
+  };
+};
+
+export type LogOutToWorkAdventureAction = BaseAction & {
+  action: {
+    userRole: UserRole;
+  };
+};
+
+// Azioni di LogIn e LogOut to PoliGloT
+export type LogInToPolyGloTAction = BaseAction & {
+  action: {
+    userRole: UserRole;
+  };
+};
+
+export type LogOutToPolyGloTAction = BaseAction & {
+  action: {
+    userRole: UserRole;
+  };
+};
+
+// Azioni di apertura e chiusura di un tool
 export type OpenToolAction = BaseAction & {
   action: {
-    flowId: string;
-    nodeId: string;
+    // ?
   };
 };
 
 export type CloseToolAction = BaseAction & {
   action: {
+    // ?
+  };
+};
+
+// Azione di apertura di un node di appendimento (inizio esecuzione del node)
+export type OpenNodeAction = BaseAction & {
+  action: {
     flowId: string;
     nodeId: string;
+    activity: string; //DA DISCUTERE!
+  };
+};
+
+// Azione di chiusura di un node di appendimento (termine esecuzione del node)
+export type CloseNodeAction = BaseAction & {
+  action: {
+    flowId: string;
+    nodeId: string;
+    activity: string; //DA DISCUTERE!
+  };
+};
+
+// Azione di passaggio al node successivo/precedente durante un'attività di learning.
+export type ChangeNodeAction = BaseAction & {
+  action: {
+    flowId: string;
+    oldNodeId: string;
+    newNodeId: string;
   };
 };
 
@@ -103,19 +162,6 @@ export type RemoveLPSelectionAction = BaseAction & {
   };
 };
 
-// Azioni di LogIn e LogOut to PoliGloT
-export type LogInToPolyGloTAction = BaseAction & {
-  action: {
-    userRole: UserRole;
-  };
-};
-
-export type LogOutToPolyGloTAction = BaseAction & {
-  action: {
-    userRole: UserRole;
-  };
-};
-
 //Azione di creazione LP
 export type CreateLPAction = BaseAction & {
   action: {
@@ -139,72 +185,36 @@ export type DeleteLPAction = BaseAction & {
   };
 };
 
-// Azioni comuni delle pagine delle attività di apprendimento
-// Azione di apertura di un node di appendimento (inizio esecuzione del node)
-export type OpenNodeAction = BaseAction & {
-  action: {
-    flowId: string;
-    nodeId: string;
-    //activity: string; //Attributo per differenziare in base al tipo di attività. Forse non necessario avendo pageId, lo intendo per identificare l'attività senza dover andare a vedere dall'id della pagina
-  };
-};
-
-// Azione di chiusura di un node di appendimento (termine esecuzione del node)
-export type CloseNodeAction = BaseAction & {
-  action: {
-    flowId: string;
-    nodeId: string;
-    //activity: string; //Attributo per differenziare in base al tipo di attività. Forse non necessario avendo pageId, lo intendo per identificare l'attività senza dover andare a vedere dall'id della pagina
-  };
-};
-
-// Azione di cambiamento di tab nel browser -> Da discutere idea
-/*    IN SOSPESO...
-export type ChangeTabAction = BaseAction & {
-  action: {
-    type: "changed_tab";
-    lpId: string;
-    nodeId: string;
-    //altro?
-  };
-}; */
-
-// Azione di passaggio al node successivo/precedente durante un'attività di learning.
-export type ChangeNodeAction = BaseAction & {
-  action: {
-    flowId: string;
-    oldNodeId: string;
-    newNodeId: string;
-  };
-};
-
 // Azione di invio della risposta fornita
 export type SubmitAnswerAction = BaseAction & {
   action: {
     flowId: string;
     nodeId: string;
     exerciseType: ExerciseType;
-    answer: string[];
-    result: boolean;
+    answer: string;
+    result: string; //boolean?
   };
 };
 
 // Tipo unione per tutte le azioni possibili dell'utente
 export type UserAction =
-  | OpenToolAction
-  | CloseToolAction
-  | OpenLPSelectionAction
+  | RegistrationToWorkAdventureAction
+  | LogInToWorkAdventureAction 
+  | LogOutToWorkAdventureAction 
+  | LogInToPolyGloTAction 
+  | LogOutToPolyGloTAction
+  | OpenToolAction 
+  | CloseToolAction 
+  | OpenNodeAction 
+  | CloseNodeAction 
+  | ChangeNodeAction 
+  | OpenLPSelectionAction 
   | CloseLPSelectionAction
   | SearchForLPAction
-  | ShowLPAction
-  | SelectLPAction
+  | ShowLPAction 
+  | SelectLPAction 
   | RemoveLPSelectionAction
-  | LogInToPolyGloTAction
-  | LogOutToPolyGloTAction
-  | CreateLPAction
-  | ModifyLPAction
-  | DeleteLPAction
-  | OpenNodeAction
-  | CloseNodeAction
-  | ChangeNodeAction
-  | SubmitAnswerAction;
+  | CreateLPAction 
+  | ModifyLPAction 
+  | DeleteLPAction 
+  | SubmitAnswerAction; 
