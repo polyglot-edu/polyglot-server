@@ -26,7 +26,7 @@ export enum Platform {
   VirtualStudio,
   Papyrus,
   WebApp,
-  WorkAdventure
+  WorkAdventure,
 }
 
 export enum UserRole {
@@ -40,7 +40,7 @@ export type BaseAction = {
   timestamp: Date;
   userId: string;
   actionType: String;
-  zoneId: ZoneId;  
+  zoneId: ZoneId;
   platform: Platform; //meglio modificare in "tool"?
 };
 
@@ -199,22 +199,22 @@ export type SubmitAnswerAction = BaseAction & {
 // Tipo unione per tutte le azioni possibili dell'utente
 export type UserAction =
   | RegistrationToWorkAdventureAction
-  | LogInToWorkAdventureAction 
-  | LogOutToWorkAdventureAction 
-  | LogInToPolyGloTAction 
+  | LogInToWorkAdventureAction
+  | LogOutToWorkAdventureAction
+  | LogInToPolyGloTAction
   | LogOutToPolyGloTAction
-  | OpenToolAction 
-  | CloseToolAction 
-  | OpenNodeAction 
-  | CloseNodeAction 
-  | ChangeNodeAction 
-  | OpenLPSelectionAction 
+  | OpenToolAction
+  | CloseToolAction
+  | OpenNodeAction
+  | CloseNodeAction
+  | ChangeNodeAction
+  | OpenLPSelectionAction
   | CloseLPSelectionAction
   | SearchForLPAction
-  | ShowLPAction 
-  | SelectLPAction 
+  | ShowLPAction
+  | SelectLPAction
   | RemoveLPSelectionAction
-  | CreateLPAction 
-  | ModifyLPAction 
-  | DeleteLPAction 
-  | SubmitAnswerAction; 
+  | CreateLPAction
+  | ModifyLPAction
+  | DeleteLPAction
+  | SubmitAnswerAction;

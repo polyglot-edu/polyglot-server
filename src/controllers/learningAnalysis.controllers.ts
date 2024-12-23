@@ -10,9 +10,17 @@ export const createAction = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "actionType is required." });
     }
 
-    if (!req.body.timestamp || !req.body.userId || !req.body.actionType || !req.body.zoneId || !req.body.platform) { // Controlla che campi siano presenti
+    if (
+      !req.body.timestamp ||
+      !req.body.userId ||
+      !req.body.actionType ||
+      !req.body.zoneId ||
+      !req.body.platform
+    ) {
+      // Controlla che campi siano presenti
       return res.status(400).json({
-        error: "Missing required fields: timestamp, userId, zoneId or platform.",
+        error:
+          "Missing required fields: timestamp, userId, zoneId or platform.",
       });
     }
 
@@ -23,10 +31,13 @@ export const createAction = async (req: Request, res: Response) => {
         const RegistrationToWorkAdventure = req.body;
         if (!RegistrationToWorkAdventure.action.userRole) {
           return res.status(400).json({
-            error: "Missing fields for registration_to_WorkAdventure: userRole.",
+            error:
+              "Missing fields for registration_to_WorkAdventure: userRole.",
           });
         }
-        action = await Models.RegistrationToWorkAdventureActionModel.create(RegistrationToWorkAdventure);
+        action = await Models.RegistrationToWorkAdventureActionModel.create(
+          RegistrationToWorkAdventure,
+        );
         break;
 
       case "log_in_to_WorkAdventure":
@@ -36,7 +47,10 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for log_in_to_WorkAdventure: userRole.",
           });
         }
-        action = await Models.LogInToWorkAdventureActionModel.create(LogInToWorkAdventure);
+        action =
+          await Models.LogInToWorkAdventureActionModel.create(
+            LogInToWorkAdventure,
+          );
         break;
 
       case "log_out_to_WorkAdventure":
@@ -46,7 +60,9 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for log_out_to_WorkAdventure: userRole.",
           });
         }
-        action = await Models.LogOutToWorkAdventureActionModel.create(LogOutToWorkAdventure);
+        action = await Models.LogOutToWorkAdventureActionModel.create(
+          LogOutToWorkAdventure,
+        );
         break;
 
       case "log_in_to_PolyGloT":
@@ -56,7 +72,8 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for log_in_to_PolyGloT: userRole.",
           });
         }
-        action = await Models.LogInToPolyGloTActionModel.create(LogInToPolyGloT);
+        action =
+          await Models.LogInToPolyGloTActionModel.create(LogInToPolyGloT);
         break;
 
       case "log_out_to_PolyGloT":
@@ -66,7 +83,8 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for log_out_to_PolyGloT: userRole.",
           });
         }
-        action = await Models.LogOutToPolyGloTActionModel.create(LogOutToPolyGloT);
+        action =
+          await Models.LogOutToPolyGloTActionModel.create(LogOutToPolyGloT);
         break;
 
       case "open_tool":
@@ -111,9 +129,14 @@ export const createAction = async (req: Request, res: Response) => {
 
       case "change_node":
         const ChangeNode = req.body;
-        if (!ChangeNode.action.flowId || !ChangeNode.action.oldNodeId || !ChangeNode.action.newNodeId) {
+        if (
+          !ChangeNode.action.flowId ||
+          !ChangeNode.action.oldNodeId ||
+          !ChangeNode.action.newNodeId
+        ) {
           return res.status(400).json({
-            error: "Missing fields for change_node: flowId, oldNodeId or newNodeId.",
+            error:
+              "Missing fields for change_node: flowId, oldNodeId or newNodeId.",
           });
         }
         action = await Models.ChangeNodeActionModel.create(ChangeNode);
@@ -126,7 +149,8 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for open_LP_selection: flowId.",
           });
         }
-        action = await Models.OpenLPSelectionActionModel.create(openLPSelection);
+        action =
+          await Models.OpenLPSelectionActionModel.create(openLPSelection);
         break;
 
       case "close_LP_selection":
@@ -136,7 +160,8 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for close_LP_selection: flowId.",
           });
         }
-        action = await Models.CloseLPSelectionActionModel.create(closeLPSelection);
+        action =
+          await Models.CloseLPSelectionActionModel.create(closeLPSelection);
         break;
 
       case "search_for_LP":
@@ -176,7 +201,8 @@ export const createAction = async (req: Request, res: Response) => {
             error: "Missing fields for remove_LP_selection: flowId.",
           });
         }
-        action = await Models.RemoveLPSelectionActionModel.create(RemoveLPSelection);
+        action =
+          await Models.RemoveLPSelectionActionModel.create(RemoveLPSelection);
         break;
 
       case "create_LP":
@@ -211,9 +237,16 @@ export const createAction = async (req: Request, res: Response) => {
 
       case "submit_answer":
         const SubmitAnswer = req.body;
-        if (!SubmitAnswer.action.flowId || !SubmitAnswer.action.nodeId || !SubmitAnswer.action.exerciseType || !SubmitAnswer.action.answer || !SubmitAnswer.action.result) {
+        if (
+          !SubmitAnswer.action.flowId ||
+          !SubmitAnswer.action.nodeId ||
+          !SubmitAnswer.action.exerciseType ||
+          !SubmitAnswer.action.answer ||
+          !SubmitAnswer.action.result
+        ) {
           return res.status(400).json({
-            error: "Missing fields for submit_answer: flowId, nodeId, exerciseType, answer or result.",
+            error:
+              "Missing fields for submit_answer: flowId, nodeId, exerciseType, answer or result.",
           });
         }
         action = await Models.SubmitAnswerActionModel.create(SubmitAnswer);
@@ -235,7 +268,7 @@ export const createAction = async (req: Request, res: Response) => {
 };
 
 // GET functions
-export async function getAllAction(req: Request, res: Response) {
+export async function getAllActions(req: Request, res: Response) {
   try {
     const actions = await Models.BaseActionModel.find({});
     if (!actions || actions.length === 0) {
@@ -243,13 +276,15 @@ export async function getAllAction(req: Request, res: Response) {
     }
     return res.status(200).send(actions);
   } catch (err: any) {
-    return res.status(500).send({err});
+    return res.status(500).send({ err });
   }
-};
+}
 
 export async function getActionByUserId(req: Request, res: Response) {
   try {
-    const actions = await Models.BaseActionModel.find({ userId: req.params.id });
+    const actions = await Models.BaseActionModel.find({
+      userId: req.params.id,
+    });
     if (!actions) {
       return res.status(404).send();
     }
@@ -265,7 +300,9 @@ export async function getActionsByUserIds(req: Request, res: Response) {
     if (userIds.length === 0) {
       return res.status(400).send();
     }
-    const actions = await Models.BaseActionModel.find({ userId: { $in: userIds } });
+    const actions = await Models.BaseActionModel.find({
+      userId: { $in: userIds },
+    });
     if (actions.length === 0) {
       return res.status(404).send();
     }
@@ -277,7 +314,9 @@ export async function getActionsByUserIds(req: Request, res: Response) {
 
 export async function getActionByActionType(req: Request, res: Response) {
   try {
-    const actions = await Models.BaseActionModel.find({ actionType: req.params.id });
+    const actions = await Models.BaseActionModel.find({
+      actionType: req.params.id,
+    });
     if (!actions) {
       return res.status(404).send();
     }
@@ -293,7 +332,9 @@ export async function getActionsByActionTypes(req: Request, res: Response) {
     if (actionTypes.length === 0) {
       return res.status(400).send();
     }
-    const actions = await Models.BaseActionModel.find({ actionType: { $in: actionTypes } });
+    const actions = await Models.BaseActionModel.find({
+      actionType: { $in: actionTypes },
+    });
     if (actions.length === 0) {
       return res.status(404).send();
     }
@@ -305,7 +346,9 @@ export async function getActionsByActionTypes(req: Request, res: Response) {
 
 export async function getActionByZoneId(req: Request, res: Response) {
   try {
-    const actions = await Models.BaseActionModel.find({ zoneId: req.params.id });
+    const actions = await Models.BaseActionModel.find({
+      zoneId: req.params.id,
+    });
     if (!actions) {
       return res.status(404).send();
     }
@@ -321,7 +364,9 @@ export async function getActionsByZoneIds(req: Request, res: Response) {
     if (zoneIds.length === 0) {
       return res.status(400).send();
     }
-    const actions = await Models.BaseActionModel.find({ zoneId: { $in: zoneIds } });
+    const actions = await Models.BaseActionModel.find({
+      zoneId: { $in: zoneIds },
+    });
     if (actions.length === 0) {
       return res.status(404).send();
     }
@@ -333,7 +378,9 @@ export async function getActionsByZoneIds(req: Request, res: Response) {
 
 export async function getActionByPlatform(req: Request, res: Response) {
   try {
-    const actions = await Models.BaseActionModel.find({ platform: req.params.id });
+    const actions = await Models.BaseActionModel.find({
+      platform: req.params.id,
+    });
     if (!actions) {
       return res.status(404).send();
     }
@@ -349,7 +396,9 @@ export async function getActionsByPlatforms(req: Request, res: Response) {
     if (platforms.length === 0) {
       return res.status(400).send();
     }
-    const actions = await Models.BaseActionModel.find({ platform: { $in: platforms } });
+    const actions = await Models.BaseActionModel.find({
+      platform: { $in: platforms },
+    });
     if (actions.length === 0) {
       return res.status(404).send();
     }
@@ -361,7 +410,9 @@ export async function getActionsByPlatforms(req: Request, res: Response) {
 
 export async function getActionByFlowId(req: Request, res: Response) {
   try {
-    const actions = await Models.BaseActionModel.find({ "action.flowId": req.params.id });
+    const actions = await Models.BaseActionModel.find({
+      "action.flowId": req.params.id,
+    });
     if (!actions || actions.length === 0) {
       return res.status(404).send();
     }
@@ -377,7 +428,9 @@ export async function getActionsByFlowIds(req: Request, res: Response) {
     if (flowIds.length === 0) {
       return res.status(400).send();
     }
-    const actions = await Models.BaseActionModel.find({ "action.flowId": { $in: flowIds } });
+    const actions = await Models.BaseActionModel.find({
+      "action.flowId": { $in: flowIds },
+    });
     if (actions.length === 0) {
       return res.status(404).send();
     }
@@ -391,14 +444,14 @@ export const calculateTimeOnTool = async (req: Request, res: Response) => {
   try {
     const { userId, platform } = req.query;
 
-    // Verifica che userId e platform siano forniti
     if (!userId || !platform) {
       return res
         .status(400)
-        .json({ error: "Missing required query parameters: userId or platform" });
+        .json({
+          error: "Missing required query parameters: userId or platform",
+        });
     }
 
-    // Recupera azioni rilevanti
     const actions = await Models.BaseActionModel.find({
       userId,
       platform: platform,
@@ -413,28 +466,29 @@ export const calculateTimeOnTool = async (req: Request, res: Response) => {
         .json({ error: "No actions found for the given user and platform." });
     }
 
-    // Trova ultima chiusura
-    const lastClose = actions.find(action => action.actionType === "close_tool");
+    const lastClose = actions.find(  // Trova ultima chiusura
+      (action) => action.actionType === "close_tool",
+    );
     if (!lastClose) {
       return res.status(400).json({
         error: "No valid close_tool action found for given user and platform.",
       });
     }
 
-    // Trova ultima apertura (prima della chiusura più recente)
-    const lastOpen = actions.find(
-      action =>
+    const lastOpen = actions.find(  // Trova ultima apertura (prima della chiusura più recente)
+      (action) =>
         action.actionType === "open_tool" &&
-        action.timestamp < lastClose.timestamp
+        action.timestamp < lastClose.timestamp,
     );
     if (!lastOpen) {
       return res.status(400).json({
-        error: "No valid open_tool action found before the last close_tool action.",
+        error:
+          "No valid open_tool action found before the last close_tool action.",
       });
     }
 
-    // Calcola differenza di tempo in millisecondi
-    const timeSpentOnTool = Number(lastClose.timestamp) - Number(lastOpen.timestamp);
+    const timeSpentOnTool =  // Calcola differenza di tempo in millisecondi
+      Number(lastClose.timestamp) - Number(lastOpen.timestamp);
     const timeSpentOnToolseconds = timeSpentOnTool / 1000;
 
     return res.status(200).json({
@@ -449,51 +503,50 @@ export const calculateTimeOnTool = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-// Recupera tutte le azioni (filtro opzionale per userId, zoneId, type, lpId, exerciseType, exerciseId)
-/*  IN SOSPESO
-export const getActionsByFilter = async (req: Request, res: Response) => {
+export const getActionsByFilters = async (req: Request, res: Response) => {  // GET con vari array di filtri facoltativi
   try {
+    console.log("Query:", req.query);
     const {
       userId,
+      actionType,
       zoneId,
-      type,
-      lpId,
-      exerciseType,
-      exerciseId,
       platform,
-      pageId,
-    } = req.body; //estrae valori di userId e zoneId dalla query string dell'URL
+      startDate,
+      endDate,
+      userRole,
+      flowId,
+      nodeId,
+      exerciseType,
+    } = req.query;
+    console.log("UserIds:", userId);
     const filter: any = {};
-    if (userId) filter.userId = userId; //Se presente aggiungi filtro, altrimenti ignora
-    if (zoneId) filter.zoneId = zoneId;
-    if (type) filter.type = type;
-    if (lpId) filter.lpId = lpId;
-    if (exerciseType) filter.exerciseType = exerciseType;
-    if (exerciseId) filter.exerciseId = exerciseId;
-    if (platform) filter.platform = platform;
-    if (pageId) filter.pageId = pageId;
-    const actions = await Models.BaseActionModel.find(filter);
-    res.status(200).json(actions); //successo!
-  } catch (error) {
-    if (error instanceof Error) {
-      res
-        .status(500)
-        .json({ error: "Error in returning actions (getAllActions)." });
+
+    const parseQueryParam = (param: any) =>
+      typeof param === "string" ? param.split(",") : param; //trasforma stringa separata da virgole in array
+
+    if (userId) filter.userId = { $in: parseQueryParam(userId) };
+    if (zoneId) filter.zoneId = { $in: parseQueryParam(zoneId) };
+    if (actionType) filter.actionType = { $in: parseQueryParam(actionType) };
+    if (platform) filter.platform = { $in: parseQueryParam(platform) };
+    if (userRole)
+      filter["action.userRole"] = { $in: parseQueryParam(userRole) };
+    if (flowId) filter["action.flowId"] = { $in: parseQueryParam(flowId) };
+    if (nodeId) filter["action.nodeId"] = { $in: parseQueryParam(nodeId) };
+    if (exerciseType)
+      filter["action.exerciseType"] = { $in: parseQueryParam(exerciseType) };
+    if (startDate || endDate) {  //Permette intervallo di tempo
+      filter.timestamp = {};
+      if (startDate) filter.timestamp.$gte = new Date(startDate as string);
+      if (endDate) filter.timestamp.$lte = new Date(endDate as string);
     }
+
+    const actions = await Models.BaseActionModel.find(filter);
+    if (actions.length === 0) {
+      return res.status(404).send();
+    }
+
+    res.status(200).send(actions);
+  } catch (err: any) {
+    return res.status(500).send(err);
   }
-};  */
-
-
-//Calcola tempo trascorso tra apertura nodo e avanzamento a pagina successiva
-
+};

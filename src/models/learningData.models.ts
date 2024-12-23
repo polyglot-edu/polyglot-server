@@ -44,7 +44,9 @@ export interface CloseLPSelectionActionDocument
 export interface SearchForLPActionDocument
   extends Types.SearchForLPAction,
     Document {}
-export interface ShowLPActionDocument extends Types.ShowLPAction, Document {}
+export interface ShowLPActionDocument
+  extends Types.ShowLPAction,
+    Document {}
 export interface SelectLPActionDocument
   extends Types.SelectLPAction,
     Document {}
@@ -71,7 +73,11 @@ export const baseActionSchema = new Schema(
     userId: { type: String, required: true },
     actionType: { type: String, required: true },
     zoneId: { type: String, required: true, enum: Object.values(Types.ZoneId) },
-    platform: { type: String, required: true, enum: Object.values(Types.Platform) },
+    platform: {
+      type: String,
+      required: true,
+      enum: Object.values(Types.Platform),
+    },
     action: { type: Schema.Types.Mixed, default: null }, //Accettabile? Mi serve per poter filtrare usando i campi contenuti in action. Possibile sostituire con discriminatori e sistemare i find.
   },
   options,
@@ -82,7 +88,11 @@ export const registrationToWorkAdventureActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true, enum: Object.values(Types.UserRole) },
+      userRole: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.UserRole),
+      },
     },
   },
   options,
@@ -92,7 +102,11 @@ export const logInToWorkAdventureActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true, enum: Object.values(Types.UserRole) },
+      userRole: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.UserRole),
+      },
     },
   },
   options,
@@ -102,7 +116,11 @@ export const logOutToWorkAdventureActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true, enum: Object.values(Types.UserRole) },
+      userRole: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.UserRole),
+      },
     },
   },
   options,
@@ -112,7 +130,11 @@ export const logInToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true, enum: Object.values(Types.UserRole) },
+      userRole: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.UserRole),
+      },
     },
   },
   options,
@@ -122,7 +144,11 @@ export const logOutToPolyGloTActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      userRole: { type: String, required: true, enum: Object.values(Types.UserRole) },
+      userRole: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.UserRole),
+      },
     },
   },
   options,
@@ -131,7 +157,8 @@ export const logOutToPolyGloTActionSchema = new Schema(
 export const openToolActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
-    action: { //?
+    action: {
+      //?
     },
   },
   options,
@@ -140,7 +167,8 @@ export const openToolActionSchema = new Schema(
 export const closeToolActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
-    action: { //?
+    action: {
+      //?
     },
   },
   options,
@@ -217,7 +245,7 @@ export const showLPActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
-      queryId: { type: String, required: true }, 
+      queryId: { type: String, required: true },
       resultId: { type: [String], required: true },
     },
   },
@@ -280,7 +308,11 @@ export const submitAnswerActionSchema = new Schema(
     action: {
       flowId: { type: String, required: true },
       nodeId: { type: String, required: true },
-      exerciseType: { type: String, required: true, enum: Object.values(Types.ExerciseType) },
+      exerciseType: {
+        type: String,
+        required: true,
+        enum: Object.values(Types.ExerciseType),
+      },
       answer: { type: String, required: true },
       result: { type: String, required: true }, //da rendere boolean
     },
@@ -313,7 +345,7 @@ export const LogOutToWorkAdventureActionModel =
     logOutToWorkAdventureActionSchema,
   );
 
-  export const LogInToPolyGloTActionModel =
+export const LogInToPolyGloTActionModel =
   BaseActionModel.discriminator<LogInToPolyGloTActionDocument>(
     "LogInToPolyGloTAction",
     logInToPolyGloTActionSchema,
@@ -325,7 +357,7 @@ export const LogOutToPolyGloTActionModel =
     logOutToPolyGloTActionSchema,
   );
 
-  export const OpenToolActionModel =
+export const OpenToolActionModel =
   BaseActionModel.discriminator<OpenToolActionDocument>(
     "OpenToolAction",
     openToolActionSchema,
@@ -337,7 +369,7 @@ export const CloseToolActionModel =
     closeToolActionSchema,
   );
 
-  export const OpenNodeActionModel =
+export const OpenNodeActionModel =
   BaseActionModel.discriminator<OpenNodeActionDocument>(
     "OpenNodeAction",
     openNodeActionSchema,

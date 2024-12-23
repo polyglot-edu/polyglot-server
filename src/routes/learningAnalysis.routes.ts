@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route("/")
   .post(checkAuth, LearningDataController.createAction)
-  .get(checkAuth, LearningDataController.getAllAction);
+  .get(checkAuth, LearningDataController.getAllActions);
 
 /* IN SOSPESO
 router
@@ -17,7 +17,7 @@ router
   .get(checkAuth, LearningDataController.getActionsByFilter);
 */
 router
-  .route("/userId/:id")
+  .route("/userId/:id") //Penso non abbia senso tenere quelle singole no?
   .get(checkAuth, LearningDataController.getActionByUserId);
 
 router
@@ -57,28 +57,11 @@ router
   .get(checkAuth, LearningDataController.getActionsByFlowIds);
 
 router
-  .route("/calcTimeOnTool")
+  .route("/calcTimeOnTool") //esempio: http://localhost:5000/api/learningAnalytics/calcTimeOnTool?userId=user1&platform=WebApp
   .get(checkAuth, LearningDataController.calculateTimeOnTool);
 
-/*
 router
-  .route("/:password/serverClean") //API to clean the server from empty flows
-//  .get(LearningDataController.serverCleanUp);
+  .route("/filters") //esempio: http://localhost:5000/api/learningAnalytics/filters?userId=user1&startDate=2024-12-10
+  .get(checkAuth, LearningDataController.getActionsByFilters);
 
-router
-  .route("/:id/runFirst") //first version of the notebook (run the execution from the first call)
-//  .get(LearningDataController.downloadNotebookVSC);
-
-router
-  .route("/:ctxId/run/:filename") // version of notebook with only ctx information
-//  .get(LearningDataController.downloadNotebookVSCCTX);
-
-router
-  .route("/:id/:ctxId/run/:filename") //2nd version of notebook with ctx information and flowId
-//  .get(LearningDataController.downloadNotebookVSC2);
-
-router
-  .route("/:id/publish") //function to publish the flow
-//  .put(checkAuth, LearningDataController.publishFlow);
-*/
 export default router;
