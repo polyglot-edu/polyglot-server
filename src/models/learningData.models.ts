@@ -35,11 +35,11 @@ export interface CloseNodeActionDocument
 export interface ChangeNodeActionDocument
   extends Types.ChangeNodeAction,
     Document {}
-export interface OpenLPSelectionActionDocument
-  extends Types.OpenLPSelectionAction,
+export interface OpenLPInfoActionDocument
+  extends Types.OpenLPInfoAction,
     Document {}
-export interface CloseLPSelectionActionDocument
-  extends Types.CloseLPSelectionAction,
+export interface CloseLPInfoActionDocument
+  extends Types.CloseLPInfoAction,
     Document {}
 export interface SearchForLPActionDocument
   extends Types.SearchForLPAction,
@@ -64,6 +64,9 @@ export interface DeleteLPActionDocument
     Document {}
 export interface SubmitAnswerActionDocument
   extends Types.SubmitAnswerAction,
+    Document {}
+export interface GradeActionDocument
+  extends Types.GradeAction,
     Document {}
 
 //Schema base
@@ -210,7 +213,7 @@ export const changeNodeActionSchema = new Schema(
   options,
 );
 
-export const openLPSelectionActionSchema = new Schema(
+export const openLPInfoActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
@@ -220,7 +223,7 @@ export const openLPSelectionActionSchema = new Schema(
   options,
 );
 
-export const closeLPSelectionActionSchema = new Schema(
+export const closeLPInfoActionSchema = new Schema(
   {
     ...baseActionSchema.obj,
     action: {
@@ -320,6 +323,16 @@ export const submitAnswerActionSchema = new Schema(
   options,
 );
 
+export const gradeActionSchema = new Schema(
+  {
+    ...baseActionSchema.obj,
+    action: {
+      flowId: { type: String, required: true },
+      grade: { type: Number, required: true },
+    }
+  }
+)
+
 // MODELLO BASE
 export const BaseActionModel = model<BaseActionDocument>(
   "BaseAction",
@@ -387,16 +400,16 @@ export const ChangeNodeActionModel =
     changeNodeActionSchema,
   );
 
-export const OpenLPSelectionActionModel =
-  BaseActionModel.discriminator<OpenLPSelectionActionDocument>(
-    "OpenLPSelectionAction",
-    openLPSelectionActionSchema,
+export const OpenLPInfoActionModel =
+  BaseActionModel.discriminator<OpenLPInfoActionDocument>(
+    "OpenLPInfoAction",
+    openLPInfoActionSchema,
   );
 
-export const CloseLPSelectionActionModel =
-  BaseActionModel.discriminator<CloseLPSelectionActionDocument>(
-    "CloseLPSelectionAction",
-    closeLPSelectionActionSchema,
+export const CloseLPInfoActionModel =
+  BaseActionModel.discriminator<CloseLPInfoActionDocument>(
+    "CloseLPInfoAction",
+    closeLPInfoActionSchema,
   );
 
 export const SearchForLPActionModel =
@@ -445,4 +458,10 @@ export const SubmitAnswerActionModel =
   BaseActionModel.discriminator<SubmitAnswerActionDocument>(
     "SubmitAnswerAction",
     submitAnswerActionSchema,
+  );
+
+export const GradeActionModel =
+  BaseActionModel.discriminator<GradeActionDocument>(
+    "GradeAction",
+    gradeActionSchema,
   );

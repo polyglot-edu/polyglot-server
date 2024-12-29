@@ -4,18 +4,11 @@ import * as LearningDataController from "../controllers/learningAnalysis.control
 
 const router = express.Router();
 
-// DA FIXARE
-
 router
   .route("/")
   .post(checkAuth, LearningDataController.createAction)
   .get(checkAuth, LearningDataController.getAllActions);
 
-/* IN SOSPESO
-router
-  .route("/filterActions")
-  .get(checkAuth, LearningDataController.getActionsByFilter);
-*/
 router
   .route("/userId/:id") //Penso non abbia senso tenere quelle singole no?
   .get(checkAuth, LearningDataController.getActionByUserId);
@@ -57,11 +50,35 @@ router
   .get(checkAuth, LearningDataController.getActionsByFlowIds);
 
 router
-  .route("/calcTimeOnTool") //esempio: http://localhost:5000/api/learningAnalytics/calcTimeOnTool?userId=user1&platform=WebApp
-  .get(checkAuth, LearningDataController.calculateTimeOnTool);
+  .route("/getUserLastLogIn/:id")
+  .get(checkAuth, LearningDataController.getUserLastLogIn);
 
 router
   .route("/filters") //esempio: http://localhost:5000/api/learningAnalytics/filters?userId=user1&startDate=2024-12-10
   .get(checkAuth, LearningDataController.getActionsByFilters);
+
+router
+  .route("/calcTimeOnTool") //esempio: http://localhost:5000/api/learningAnalytics/calcTimeOnTool?userId=user1&platform=WebApp
+  .get(checkAuth, LearningDataController.calculateTimeOnTool);
+
+router
+  .route("/calcNodeTimeByUserId/:id")
+  .get(checkAuth, LearningDataController.calculateNodeTimeByUserId);
+
+router
+  .route("/calcGradeMetrics") //esempio: http://localhost:5000/api/learningAnalytics/calcGradeMetrics?flowId=flow1
+  .get(checkAuth, LearningDataController.calculateGradeMetrics);
+
+router
+  .route("/getGradeByUserId") 
+  .get(checkAuth, LearningDataController.getGradeByUserId);
+
+router    
+  .route("/calcQuizMetrics")  //esempio: http://localhost:5000/api/learningAnalytics/calcQuizMetrics?flowId=flow1&nodeId=node3
+  .get(checkAuth, LearningDataController.calculateQuizMetrics);
+
+  router  
+  .route("/calcLPQuizMetrics")  //esempio: http://localhost:5000/api/learningAnalytics/calcLPQuizMetrics?flowId=flow1
+  .get(checkAuth, LearningDataController.calculateLPQuizMetrics);
 
 export default router;

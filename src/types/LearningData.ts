@@ -100,7 +100,7 @@ export type OpenNodeAction = BaseAction & {
 };
 
 // Azione di chiusura di un node di appendimento (termine esecuzione del node)
-export type CloseNodeAction = BaseAction & {
+export type CloseNodeAction = BaseAction & { //Quando avviene questa azione? Ad ogni cambio pagina o solo quando viene chiuso il nodo e basta?
   action: {
     flowId: string;
     nodeId: string;
@@ -118,14 +118,14 @@ export type ChangeNodeAction = BaseAction & {
 };
 
 //Apertura schermata di info aggiuntive nella selezione LP
-export type OpenLPSelectionAction = BaseAction & {
+export type OpenLPInfoAction = BaseAction & {
   action: {
     flowId: string;
   };
 };
 
 // Chiusura schermata di info aggiuntive riguardo un LP (serve?)
-export type CloseLPSelectionAction = BaseAction & {
+export type CloseLPInfoAction = BaseAction & {
   action: {
     flowId: string;
   };
@@ -192,9 +192,16 @@ export type SubmitAnswerAction = BaseAction & {
     nodeId: string;
     exerciseType: ExerciseType;
     answer: string;
-    result: string; //boolean?
+    result: string; //boolean? enum{"correct","wrong"}?
   };
 };
+
+export type GradeAction = BaseAction & {
+  action: {
+    flow: string;
+    grade: number;
+  }
+}
 
 // Tipo unione per tutte le azioni possibili dell'utente
 export type UserAction =
@@ -208,8 +215,8 @@ export type UserAction =
   | OpenNodeAction
   | CloseNodeAction
   | ChangeNodeAction
-  | OpenLPSelectionAction
-  | CloseLPSelectionAction
+  | OpenLPInfoAction
+  | CloseLPInfoAction
   | SearchForLPAction
   | ShowLPAction
   | SelectLPAction
@@ -217,4 +224,5 @@ export type UserAction =
   | CreateLPAction
   | ModifyLPAction
   | DeleteLPAction
-  | SubmitAnswerAction;
+  | SubmitAnswerAction
+  | GradeAction;
