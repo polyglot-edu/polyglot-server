@@ -51,6 +51,8 @@ spec:
               value: {{ .Values.env.authAudience }}
             - name: APIKEY
               value: {{ .Values.env.apiKey }}
+            - name: SECRETKEY
+              value: {{ .Values.env.secretKey }}
             - name: AIGENERATION
               value: {{ .Values.env.AIGENERATION }}
           ports:

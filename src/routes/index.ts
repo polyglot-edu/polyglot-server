@@ -3,6 +3,7 @@ import flowRouter from "./flows.routes";
 import courseRouter from "./course.routes";
 import executionRouter from "./execution.routes";
 import userRouter from "./user.routes";
+import fileRouter from "./file.routes";
 import searchRouter from "./search.routes";
 import metadataRouter from "./metadata.routes";
 import openaiRouter from "./openai.routes";
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.use("/api/flows", flowRouter);
 router.use("/api/course", courseRouter);
+router.use("/api/file", fileRouter);
 router.use("/api/execution", executionRouter);
 router.use("/api/user", userRouter);
 router.use("/api/search", searchRouter);

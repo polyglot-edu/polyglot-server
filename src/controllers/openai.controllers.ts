@@ -5,6 +5,16 @@ import {
   sendClassicPrompt,
 } from "../execution/prompts";
 import { genGraphChatGpt } from "../execution/generators";
+import {
+  AIExerciseType,
+  AnalyseType,
+  CorrectorType,
+  LOType,
+  MaterialType,
+  SummarizeType,
+} from "../types/AIGenerativeTypes";
+import { AxiosResponse } from "axios";
+import { API } from "../api/api";
 
 export async function genResource(
   req: Request<any, any, GenResProps>,
@@ -46,6 +56,66 @@ export async function genConceptMap(
     const graph = await genGraphChatGpt(topic, depth);
 
     return res.status(200).json(graph);
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function analyseMaterial(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.analyseMaterial(req.body);
+    return res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error("error");
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function generateLO(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.generateLO(req.body);
+    return res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error("error");
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function generateMaterial(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.generateMaterial(req.body);
+    return res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function summarize(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.summarize(req.body);
+    return res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function activityGenerator(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.generateNewExercise(req.body);
+    return res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: error });
+  }
+}
+
+export async function corrector(req: Request<any, any>, res: Response) {
+  try {
+    const response = await API.corrector(req.body);
+    return res.status(200).json(response.data);
   } catch (error: any) {
     console.error(error);
     return res.status(500).json({ error: error });

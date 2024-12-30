@@ -65,6 +65,7 @@ jobs:
             openAiEndpoint: domain
             testMode: true
             apiKey: '${{ secrets.APIKEY }}'
+            secretKey: '${{ secrets.SECRETKEY }}'
             AIGENERATION: '${{ secrets.AIGENERATION }}'
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
