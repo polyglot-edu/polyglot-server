@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as Models from "../models/learningData.models";
 import * as Types from "../types/LearningData";
+import { flowGradeUpdate } from "../learningAnalyticsAlgorithms";
 
 export const createAction = async (req: Request, res: Response) => {
   try {
@@ -250,7 +251,7 @@ export const createAction = async (req: Request, res: Response) => {
         action = await Models.SubmitAnswerActionModel.create(SubmitAnswer);
         break;
 
-      case "grade_LP":    //TO CHECK!
+      case "GradeAction":    //TO CHECK!
         const GradeLP = req.body;
         if (
           !GradeLP.action.flowId ||
@@ -258,10 +259,15 @@ export const createAction = async (req: Request, res: Response) => {
         ) {
           return res.status(400).json({
             error:
-              "Missing fields for grade_LP: flowId or grade.",
+              "Missing fields for GradeAction: flowId or grade.",
           });
         }
+        
         action = await Models.GradeActionModel.create(GradeLP);
+
+        //update LP grade
+        flowGradeUpdate(GradeLP.action.flowId)
+
         break;
 
       default:
@@ -704,7 +710,7 @@ export const calculateGradeMetrics = async (req: Request, res: Response) => {
       {
         $match: {
           "action.flowId": flowId,
-          actionType: "grade_LP",
+          actionType: "GradeAction",
         },
       },
       {
@@ -741,18 +747,18 @@ export const getGradeByUserId = async (req: Request, res: Response) => {
         error: "Missing required parameters: userId and flowId",
       });
     }
-
+    console.log('check1')
     const gradeAction = await Models.BaseActionModel.findOne({
       userId,
       "action.flowId": flowId,
-      actionType: "grade_LP",
+      actionType: "GradeAction",
     });
     if (!gradeAction) {
       return res.status(404).json({
         error: "No grade found for the given user and learning path.",
       });
     }
-
+    console.log('check2')
     res.status(200).send(gradeAction);
   } catch (error: any) {
     console.error("Error getting grade:", error);
